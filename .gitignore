@@ -1,0 +1,9 @@
+*.exe
+*.exp
+*.ilk
+*.lib
+*.pdb
+*.user
+Debug/
+Release/
+.vs/
