@@ -43,9 +43,19 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opencv_world450d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc2017_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
@@ -87,22 +97,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FormMoreInfo.cpp" />
+    <ClCompile Include="ImageMacher.cpp" />
+    <ClCompile Include="KeyStore.cpp" />
     <ClCompile Include="MouseHook.cpp" />
-    <ClCompile Include="MouseKeyboardHook.cpp" />
+    <ClCompile Include="Recongnizer.cpp" />
+    <ClCompile Include="ScreenGraber.cpp" />
+    <ClCompile Include="TaskThread.cpp" />
     <QtRcc Include="KeyRecorder.qrc" />
     <QtUic Include="FormMoreInfo.ui" />
     <QtUic Include="KeyRecorder.ui" />
     <QtMoc Include="KeyRecorder.h" />
-    <ClCompile Include="GloableApp.cpp" />
     <ClCompile Include="KeyRecorder.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h" />
+    <ClInclude Include="KeyInfo.h" />
+    <ClInclude Include="KeyStore.h" />
+    <ClInclude Include="Recongnizer.h" />
+    <QtMoc Include="TaskThread.h" />
+    <QtMoc Include="ScreenGraber.h" />
     <QtMoc Include="FormMoreInfo.h" />
-    <ClInclude Include="GloableApp.h" />
     <QtMoc Include="MouseHook.h" />
-    <ClInclude Include="MouseKeyboardHook.h" />
+    <ClInclude Include="ImageMacher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

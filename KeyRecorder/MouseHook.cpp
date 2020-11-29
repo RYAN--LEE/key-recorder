@@ -84,9 +84,9 @@ void MouseHook::setHook()
     if (m_bHookEnable)
         return;
     //这两个底层钩子,不要DLL就可以全局
-    //                         底层键盘钩子
+    //底层键盘钩子
     //m_keyHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyProc, GetModuleHandle(NULL), 0);
-    //                          底层鼠标钩子
+    //底层鼠标钩子
     m_mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, GetModuleHandle(NULL), 0);
     m_bHookEnable = true;
 }

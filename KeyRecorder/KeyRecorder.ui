@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>518</width>
-    <height>162</height>
+    <height>317</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,7 +43,7 @@
      <string>start</string>
     </property>
     <property name="shortcut">
-     <string>F9</string>
+     <string>F7</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonStop">
@@ -59,13 +59,13 @@
      <string>stop</string>
     </property>
     <property name="shortcut">
-     <string>F10</string>
+     <string>F8</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonPlay">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>140</x>
       <y>10</y>
       <width>41</width>
       <height>23</height>
@@ -75,13 +75,13 @@
      <string>play</string>
     </property>
     <property name="shortcut">
-     <string>F11</string>
+     <string>F9</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonMore">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>280</x>
       <y>10</y>
       <width>41</width>
       <height>23</height>
@@ -90,12 +90,115 @@
     <property name="text">
      <string>more</string>
     </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStartRcd">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>start record</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonTest">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>90</y>
+      <width>51</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>test</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopRcd">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>90</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>stop record</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelResult">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>130</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>识别结果</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>190</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>二进制化值</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditThreshold">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>190</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonPause">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>10</y>
+      <width>41</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>pause</string>
+    </property>
     <property name="shortcut">
-     <string>F12</string>
+     <string>F10</string>
     </property>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

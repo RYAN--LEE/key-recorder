@@ -22,14 +22,17 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="opencv">
+      <UniqueIdentifier>{c6799e8c-77e8-4206-8bb2-a17ce7484a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tesseract">
+      <UniqueIdentifier>{4f9afef9-0e8e-4629-b8a2-90c1f87b1f97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="KeyRecorder.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="KeyRecorder.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
     <QtMoc Include="KeyRecorder.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -41,27 +44,42 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GloableApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MouseKeyboardHook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MouseHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FormMoreInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImageMacher.cpp">
+      <Filter>opencv</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenGraber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Recongnizer.cpp">
+      <Filter>tesseract</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyStore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GloableApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MouseKeyboardHook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="constant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageMacher.h">
+      <Filter>opencv</Filter>
+    </ClInclude>
+    <ClInclude Include="Recongnizer.h">
+      <Filter>tesseract</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyStore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -72,9 +90,18 @@
     <QtMoc Include="FormMoreInfo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ScreenGraber.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TaskThread.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FormMoreInfo.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="KeyRecorder.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
