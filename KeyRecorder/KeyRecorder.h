@@ -13,6 +13,7 @@
 #include "KeyStore.h"
 #include "TaskThread.h"
 #include "FormOperate.h"
+#include "FormConfig.h"
 
 
 class KeyRecorder : public QMainWindow
@@ -27,34 +28,34 @@ signals:
 	void startPlay(QVector<KeyInfo> points);
 
 public slots:
-	void recieveClicked(long x, long y);
-	void changeItem(QTreeWidgetItem* item, int column);
+	//void recieveClicked(long x, long y);
+	//void changeItem(QTreeWidgetItem* item, int column);
 	void recieveRecongnizeValue(QString value);
 	void recieveMatchImage(QString image, bool status);
 
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
+	void on_pushButtonConfig_clicked();
 
-	void on_pushButtonStart_clicked();
-	void on_pushButtonStop_clicked();
-	//void playClick(QVector<KeyInfo> points);
+	//void on_pushButtonStart_clicked();
+	//void on_pushButtonStop_clicked();
 	
-	void on_pushButtonRecoImg_clicked();
-	void on_pushButtonRecoText_clicked();
-	void on_pushButtonRom_clicked();
-	void on_pushButtonPMS_clicked();
+	//void on_pushButtonRecoImg_clicked();
+	//void on_pushButtonRecoText_clicked();
+	//void on_pushButtonRom_clicked();
+	//void on_pushButtonPMS_clicked();
 
-	void on_pushButtonTest_clicked();
+	//void on_pushButtonTest_clicked();
 
-	void showOperateForm();
-	void imageMatchOperateFinish(QString name);
-	void textMatchOperateFinish(QRect rect);
-	void roomOperateFinish(QString room);
+	//void showOperateForm();
+	//void imageMatchOperateFinish(QString name);
+	//void textMatchOperateFinish(QRect rect);
+	//void roomOperateFinish(QString room);
 
 private:
-	void init();
+	//void init();
 	void initTray();
-	void setTreeWidget(QVector<KeyInfo> & vecPoint);
+	//void setTreeWidget(QVector<KeyInfo> & vecPoint);
 
 private:
 	Ui::KeyRecorderClass	ui;
@@ -67,14 +68,9 @@ private:
 	ScreenGraber* m_pScreenGraber;
 	Recongnizer* m_pRecongnizer;
 
-	//bool m_bPlay;
+	//QPoint m_recordBegin;
+	//QPoint m_recordEnd;
+	//QPoint m_recordPos;
 
-	bool m_bRecord;
-	QPoint m_recordBegin;
-	QPoint m_recordEnd;
-	QPoint m_recordPos;
-
-	long					m_nPlayInterval;
-	FormMoreInfo* m_pFormMoreInfo;
 	FormOperate* m_pFormOperate;
 };

@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FormCaptureScreen.cpp" />
+    <ClCompile Include="FormConfig.cpp" />
     <ClCompile Include="FormMoreInfo.cpp" />
     <ClCompile Include="FormOperate.cpp" />
     <ClCompile Include="ImageMacher.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="Utils.cpp" />
     <QtRcc Include="KeyRecorder.qrc" />
     <QtUic Include="FormCaptureScreen.ui" />
+    <QtUic Include="FormConfig.ui" />
     <QtUic Include="FormMoreInfo.ui" />
     <QtUic Include="FormOperate.ui" />
     <QtUic Include="KeyRecorder.ui" />
@@ -117,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h" />
+    <QtMoc Include="FormConfig.h" />
     <ClInclude Include="Utils.h" />
     <QtMoc Include="FormOperate.h" />
     <QtMoc Include="FormCaptureScreen.h" />

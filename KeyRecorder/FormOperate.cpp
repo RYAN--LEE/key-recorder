@@ -14,13 +14,16 @@ FormOperate::~FormOperate()
 
 void FormOperate::on_pushButtonImg_clicked()
 {
+	//this->parentWidget()->hide();
 	m_nOperateType = ImageMatch;
 	FormCaptureScreen* pForm = new FormCaptureScreen(NULL);
 	connect(pForm, &FormCaptureScreen::signalCompleteCature, this, &FormOperate::captureFinished);
 	pForm->show();
+
 }
 void FormOperate::on_pushButtonText_clicked()
 {
+	//this->parentWidget()->hide();
 	m_nOperateType = TextMatch;
 	FormCaptureScreen* pForm = new FormCaptureScreen(NULL);
 	connect(pForm, &FormCaptureScreen::signalCompleteCature, this, &FormOperate::captureFinished);
@@ -33,6 +36,8 @@ void FormOperate::on_pushButtonRom_clicked()
 
 void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 {
+	//this->parentWidget()->show();
+
 	switch (m_nOperateType)
 	{
 		case ImageMatch:
@@ -42,6 +47,7 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 			QString path = "./" + name;
 			catureImage.save(path, "png");
 			emit operateImageMatch(name);
+
 			break;
 		}
 		case TextMatch:

@@ -74,6 +74,9 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h">
@@ -114,6 +117,9 @@
     <QtMoc Include="FormCaptureScreen.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="FormConfig.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FormMoreInfo.ui">
@@ -126,6 +132,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="FormCaptureScreen.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FormConfig.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
