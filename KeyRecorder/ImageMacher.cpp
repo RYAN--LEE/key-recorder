@@ -17,7 +17,7 @@ int ImageMacher::enhanceImage()
 		std::cout << "打开图片失败,请检查" << std::endl;
 		return -1;
 	}
-	imshow("原图像", image);
+	//imshow("原图像", image);
 	//Mat imageRGB[3];
 	//split(image, imageRGB);
 	//for (int i = 0; i < 3; i++)
@@ -48,12 +48,12 @@ int ImageMacher::grayImage(QByteArray& srcData, QByteArray& dstData, int nThresh
 		qDebug() << "Please input image path" << endl;
 		return 0;
 	}
-	imshow("原图", img);
+	//imshow("原图", img);
 	cvtColor(img, imgGray, COLOR_BGR2GRAY);
-	imshow("灰度图", imgGray);
+	//imshow("灰度图", imgGray);
 	//blur(imgGray, imgGray, Size(3, 3));
 	threshold(imgGray, result, nThreshold, 255, THRESH_BINARY);
-	imshow("二值化后的图", result);
+	//imshow("二值化后的图", result);
 
 	//expend(result);
 
@@ -112,10 +112,11 @@ bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath)
 	minMaxLoc(ftmp, &minVal, &maxVal, &minLoc, &maxLoc); //找到最佳匹配点
 	rectangle(src, Rect(minLoc.x, minLoc.y, templ.cols, templ.rows), cv::Scalar(0, 255, 0), 2, 0);
 
-	imshow("src", src);
-	imshow("template", templ);
+	//imshow("src", src);
+	//imshow("template", templ);
+	//waitKey();
 	
-	if (minVal < 10) {
+	if (minVal < 100) {
 		return true;
 	}
 	return false;

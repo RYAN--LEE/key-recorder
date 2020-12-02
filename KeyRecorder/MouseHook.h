@@ -19,13 +19,21 @@ public:
 	HHOOK GetKeyHook();
 
 	void setMouseClick(long x, long y);
+	void setKeyPause();
 	void setHook();
-	void  unHook();
+	void unHook();
+
+	void setHookKey();
+	void unHookKey();
+
 
 	void clickKey(long x, long y);
 
+	void pressKeyPaste();
+
 signals:
 	void mouseClicked(long x, long y);
+	void keyPause();
 
 private:
 	MouseHook();

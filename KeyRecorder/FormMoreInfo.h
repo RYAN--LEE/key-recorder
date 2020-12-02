@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_FormMoreInfo.h"
 
-class FormMoreInfo : public QWidget
+class FormMoreInfo : public QDialog
 {
 	Q_OBJECT
 

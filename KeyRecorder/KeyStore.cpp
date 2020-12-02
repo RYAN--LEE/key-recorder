@@ -44,15 +44,13 @@ QVector<KeyInfo> KeyStore::getKeys()
 		return vecPoint;
 
 	QTextStream in(&file);
-	QString data = in.readAll();
-	file.close();
-
-	QStringList points = data.split('\n');
-	for (QList<QString>::iterator itr = points.begin(); itr != points.end(); itr++)
+	while (!in.atEnd())
 	{
-		KeyInfo keyInfo(*itr);
+		QString data = in.readLine();
+		KeyInfo keyInfo(data);
 		vecPoint.push_back(keyInfo);
 	}
+	file.close();
 
 	return vecPoint;
 }

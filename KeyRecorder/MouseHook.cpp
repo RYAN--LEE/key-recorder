@@ -8,10 +8,11 @@ LRESULT CALLBACK keyProc(int nCode, WPARAM wParam, LPARAM lParam)
     //在WH_KEYBOARD_LL模式下lParam 是指向KBDLLHOOKSTRUCT类型地址
     KBDLLHOOKSTRUCT* pkbhs = (KBDLLHOOKSTRUCT*)lParam;
     qDebug() << "key:" << pkbhs->vkCode;
-    if (pkbhs->vkCode == VK_F12 || pkbhs->vkCode == VK_F10)
+    if (pkbhs->vkCode == VK_F10)
     {
      /*   void unHook();
         qApp->quit();*/
+        MouseHook::instance()->setKeyPause();
     }
     return 0;//返回1表示截取消息不再传递,返回0表示不作处理,消息继续传递
 
@@ -60,6 +61,10 @@ void MouseHook::setMouseClick(long x, long y)
     emit mouseClicked(x, y);
 }
 
+void MouseHook::setKeyPause()
+{
+    emit keyPause();
+}
 void MouseHook::clickKey(long x, long y)
 {
     SetCursorPos(x, y);
@@ -89,5 +94,27 @@ void MouseHook::setHook()
     //底层鼠标钩子
     m_mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, GetModuleHandle(NULL), 0);
     m_bHookEnable = true;
+}
+
+void MouseHook::setHookKey()
+{
+    m_keyHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyProc, GetModuleHandle(NULL), 0);
+}
+void MouseHook::unHookKey()
+{
+    UnhookWindowsHookEx(m_mouseHook);
+}
+
+void MouseHook::pressKeyPaste()
+{
+    //setHookKey();
+    //keybd_event(VK_CONTROL, 0, 0, 0);
+    keybd_event('v', 0, 0, 0);
+
+    //keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
+    keybd_event('V', 0, KEYEVENTF_KEYUP, 0);
+    //unHookKey();
+
+    qDebug() << "press key" << endl;
 }
 

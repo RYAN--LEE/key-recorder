@@ -12,6 +12,7 @@
 #include "Recongnizer.h"
 #include "KeyStore.h"
 #include "TaskThread.h"
+#include "FormOperate.h"
 
 
 class KeyRecorder : public QMainWindow
@@ -20,27 +21,40 @@ class KeyRecorder : public QMainWindow
 
 public:
 	KeyRecorder(QWidget* parent = Q_NULLPTR);
-	~KeyRecorder() {};
+	~KeyRecorder();
 
 signals:
 	void startPlay(QVector<KeyInfo> points);
 
 public slots:
 	void recieveClicked(long x, long y);
-	void on_pushButtonStart_clicked();
-	void on_pushButtonStop_clicked();
+	void changeItem(QTreeWidgetItem* item, int column);
+	void recieveRecongnizeValue(QString value);
+	void recieveMatchImage(QString image, bool status);
+
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
-	void on_pushButtonMore_clicked();
-	void playClick(QVector<KeyInfo> points);
 
-	void on_pushButtonStartRcd_clicked();
-	void on_pushButtonStopRcd_clicked();
+	void on_pushButtonStart_clicked();
+	void on_pushButtonStop_clicked();
+	//void playClick(QVector<KeyInfo> points);
+	
+	void on_pushButtonRecoImg_clicked();
+	void on_pushButtonRecoText_clicked();
+	void on_pushButtonRom_clicked();
+	void on_pushButtonPMS_clicked();
+
 	void on_pushButtonTest_clicked();
 
+	void showOperateForm();
+	void imageMatchOperateFinish(QString name);
+	void textMatchOperateFinish(QRect rect);
+	void roomOperateFinish(QString room);
+
 private:
-	bool checkScreenStatus(int status);
-	QString getTemplate(int status);
+	void init();
+	void initTray();
+	void setTreeWidget(QVector<KeyInfo> & vecPoint);
 
 private:
 	Ui::KeyRecorderClass	ui;
@@ -62,4 +76,5 @@ private:
 
 	long					m_nPlayInterval;
 	FormMoreInfo* m_pFormMoreInfo;
+	FormOperate* m_pFormOperate;
 };

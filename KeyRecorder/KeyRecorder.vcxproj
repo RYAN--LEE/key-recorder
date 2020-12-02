@@ -96,15 +96,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FormCaptureScreen.cpp" />
     <ClCompile Include="FormMoreInfo.cpp" />
+    <ClCompile Include="FormOperate.cpp" />
     <ClCompile Include="ImageMacher.cpp" />
     <ClCompile Include="KeyStore.cpp" />
     <ClCompile Include="MouseHook.cpp" />
     <ClCompile Include="Recongnizer.cpp" />
     <ClCompile Include="ScreenGraber.cpp" />
     <ClCompile Include="TaskThread.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <QtRcc Include="KeyRecorder.qrc" />
+    <QtUic Include="FormCaptureScreen.ui" />
     <QtUic Include="FormMoreInfo.ui" />
+    <QtUic Include="FormOperate.ui" />
     <QtUic Include="KeyRecorder.ui" />
     <QtMoc Include="KeyRecorder.h" />
     <ClCompile Include="KeyRecorder.cpp" />
@@ -112,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h" />
+    <ClInclude Include="Utils.h" />
+    <QtMoc Include="FormOperate.h" />
+    <QtMoc Include="FormCaptureScreen.h" />
     <ClInclude Include="KeyInfo.h" />
     <ClInclude Include="KeyStore.h" />
     <ClInclude Include="Recongnizer.h" />

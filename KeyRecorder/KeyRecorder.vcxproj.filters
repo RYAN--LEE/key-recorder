@@ -65,6 +65,15 @@
     <ClCompile Include="TaskThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormOperate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormCaptureScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h">
@@ -82,6 +91,9 @@
     <ClInclude Include="KeyInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MouseHook.h">
@@ -96,12 +108,24 @@
     <QtMoc Include="TaskThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="FormOperate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FormCaptureScreen.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FormMoreInfo.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="KeyRecorder.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FormOperate.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FormCaptureScreen.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

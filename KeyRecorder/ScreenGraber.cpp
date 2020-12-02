@@ -18,8 +18,8 @@ void ScreenGraber::grabScreen(int x, int y, int width, int height, QByteArray& b
 	QScreen* screen = QGuiApplication::primaryScreen();
 	QPixmap img = screen->grabWindow(0, x, y, width, height);
 
-	//img.save("test.jpg", "jpg");
+	img.save("testx.png", "png");
 	QBuffer buffer(&bytes);
 	buffer.open(QIODevice::WriteOnly);
-	img.save(&buffer, "jpg");
+	img.save(&buffer, "png");
 }

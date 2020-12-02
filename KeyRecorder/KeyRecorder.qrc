@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="KeyRecorder">
+    <qresource prefix="/icon">
+        <file>logo.png</file>
     </qresource>
 </RCC>
