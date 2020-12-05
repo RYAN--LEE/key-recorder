@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>531</width>
-    <height>405</height>
+    <width>500</width>
+    <height>392</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,6 +34,13 @@
       <widget class="QPushButton" name="pushButtonStop">
        <property name="text">
         <string>停止</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCancel">
+       <property name="text">
+        <string>取消</string>
        </property>
       </widget>
      </item>
@@ -124,6 +131,74 @@
     </widget>
    </item>
    <item>
+    <widget class="Line" name="line_3">
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,4,1,4">
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>系统编号</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="lineEditPMSType"/>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="lineEditHotelCode"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEditGroupCode"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>pms地址</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEditPMS"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>集团编号</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>酒店编号</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>设备ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelDeviceID">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="Line" name="line_2">
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
@@ -134,113 +209,113 @@
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,1">
-     <item row="3" column="2">
-      <widget class="QPushButton" name="pushButtonRom">
-       <property name="text">
-        <string>获取房间号</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>身份证号</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QPushButton" name="pushButtonPMS">
-       <property name="text">
-        <string>设置</string>
-       </property>
-      </widget>
+    <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,4,1,4">
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="lineEditCardID"/>
      </item>
      <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>二值化参数</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="labelResult">
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="lineEditRom"/>
-     </item>
-     <item row="5" column="2">
-      <widget class="QPushButton" name="pushButtonTest">
-       <property name="text">
-        <string>流程测试</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEditRecoImg"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="lineEditPMS"/>
-     </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="pushButtonRecoImg">
-       <property name="text">
-        <string>开始识别</string>
+        <string>姓名</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEditThreshold"/>
+      <widget class="QLineEdit" name="lineEditName"/>
      </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="labelRecoImgResult">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>识别文字</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEditRecoText"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>识别图片</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
+     <item row="0" column="2">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>pms地址</string>
+        <string>身份证</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
+     <item row="1" column="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonPMS">
+         <property name="text">
+          <string>测试连接</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_4">
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,4,1,4">
+     <item row="1" column="2">
       <widget class="QPushButton" name="pushButtonRecoText">
        <property name="text">
         <string>开始识别</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="3">
-      <widget class="QLabel" name="labelRom">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEditRecoImg"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>识别图片</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEditRecoText"/>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="labelRecoImgResult">
        <property name="text">
         <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButtonRecoImg">
+       <property name="text">
+        <string>开始识别</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="labelResult">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>识别文字</string>
        </property>
       </widget>
      </item>

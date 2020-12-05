@@ -1,8 +1,12 @@
 #include "TaskThread.h"
 #include "ImageMacher.h"
 #include "Utils.h"
+#include "constant.h"
+#include "HTTPClient.h"
 #include <QDebug>
 #include <QRect>
+#include <QClipboard>
+#include <QApplication>
 
 TaskThread::TaskThread(QObject *parent, MouseHook* pMouseHook, Recongnizer* pRecongnizer, ScreenGraber* pScreenGraber)
 	: QThread(parent)
@@ -95,7 +99,12 @@ void TaskThread::run()
             if (!next.condition().isEmpty())
             {
                 bool bRet = handleCondition(next.condition());
-                next = bRet ? keyMap[next.m_nextID] : keyMap[next.m_breakID];
+                int nextID = bRet ? next.m_nextID : next.m_breakID;
+                if (!keyMap.contains(nextID))
+                {
+                    break;
+                }
+                next = keyMap[nextID];
                 continue;
             }
 
@@ -129,51 +138,57 @@ bool TaskThread::handleCondition(QString& condition)
     }
     else if (condition.contains("text_"))
     {
-        //handle text match
-        QRect rect = Utils::decodeTextMatch(condition);
-        if (!rect.isEmpty())
-        {
-            QByteArray bytes;
-            m_pScreenGraber->grabScreen(rect.x(), rect.y(), rect.width(), rect.height(), bytes);
+        m_strID = recongnizeText(condition);
+        emit recongnizeValue(m_strID);
 
-            bool ok = false;
-            int nThreshold = 100;//ui.lineEditThreshold->text().toInt(&ok);
-            if (!ok) {
-                nThreshold = 100;
-            }
-
-            QByteArray grayBytes;
-            ImageMacher macher;
-            macher.grayImage(bytes, grayBytes, nThreshold);
-            //macher.enhanceImage();
-
-            QString strResult = m_pRecongnizer->DoRecongnize(grayBytes.data(), grayBytes.count());
-
-            strResult = strResult.replace(" ", "");
-            strResult = strResult.simplified();
-
-            m_strID = strResult;
-            emit recongnizeValue(strResult);
-            //ui.labelResult->setText(strResult);
-        }
     }
     else if (condition.contains("room_"))
     {
+        QThread::msleep(200);
+
         QString roomNo = getRoomNum(m_strName, m_strID);
         inputData(roomNo);
+        emit roomInputed(roomNo);
     }
     return true;
 }
 
+QString TaskThread::recongnizeText(QString& imgDir)
+{
+    //handle text match
+    QRect rect = Utils::decodeTextMatch(imgDir);
+    if (!rect.isEmpty())
+    {
+        QByteArray bytes;
+        m_pScreenGraber->grabScreen(rect.x(), rect.y(), rect.width(), rect.height(), bytes);
+
+        int nThreshold = 100;
+
+        QByteArray grayBytes;
+        ImageMacher macher;
+        macher.grayImage(bytes, grayBytes, nThreshold);
+        //macher.enhanceImage();
+
+        QString strResult = m_pRecongnizer->DoRecongnize(grayBytes.data(), grayBytes.count());
+
+        strResult = strResult.replace(" ", "");
+        strResult = strResult.simplified();
+        return strResult;
+    }
+    return QString("");
+}
+
 QString TaskThread::getRoomNum(QString strName, QString strID)
 {
-
-    return "ABCDabcdefg13EFGHL1234";
+    HTTPClient client;
+    QString roomNum;
+    QString strRet = client.getRoomNumber(strName, strID, roomNum);
+    return roomNum;
 }
 
 QString TaskThread::getTemplate(QString &status)
 {
-    return "./" + status;
+    return IMG_DIR + status;
 }
 
 
@@ -211,7 +226,7 @@ void TaskThread::inputData(QString& data)
 {
     data = data.toUpper();
 
-    wchar_t str[256] = { 0 };
+    /*wchar_t str[256] = { 0 };
     int nLen = data.toWCharArray(str);
     //int nLen = data.size();
     INPUT input[128];
@@ -230,5 +245,22 @@ void TaskThread::inputData(QString& data)
         input[index].ki.dwFlags = KEYEVENTF_KEYUP;
     }
     
-    SendInput(nLen*2, input, sizeof(INPUT));
+    SendInput(nLen*2, input, sizeof(INPUT));*/
+
+    wchar_t str[256] = { 0 };
+    int nLen = data.toWCharArray(str);
+    for (int i = 0; i < nLen; i++)
+    {
+        INPUT input1;
+        WORD vk = str[i];
+        input1.type = INPUT_KEYBOARD;
+        input1.ki.wVk = vk;
+        SendInput(1, &input1, sizeof(INPUT));
+
+        INPUT input2;
+        input2.type = INPUT_KEYBOARD;
+        input2.ki.wVk = vk;
+        input2.ki.dwFlags = KEYEVENTF_KEYUP;
+        SendInput(1, &input2, sizeof(INPUT));
+    }
 }

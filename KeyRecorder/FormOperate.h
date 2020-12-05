@@ -28,7 +28,9 @@ public slots:
 	void on_pushButtonText_clicked();
 	void on_pushButtonRom_clicked();
 
-	void captureFinished(QPixmap catureImage,QRect rect);
+	void captureFinished(QPixmap catureImage, QRect rect);
+
+	void showCapture();
 
 
 private:

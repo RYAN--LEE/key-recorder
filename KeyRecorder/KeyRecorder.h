@@ -28,37 +28,20 @@ signals:
 	void startPlay(QVector<KeyInfo> points);
 
 public slots:
-	//void recieveClicked(long x, long y);
-	//void changeItem(QTreeWidgetItem* item, int column);
 	void recieveRecongnizeValue(QString value);
 	void recieveMatchImage(QString image, bool status);
+	void recieveRoomNum(QString roomNum);
 
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
 	void on_pushButtonConfig_clicked();
 
-	//void on_pushButtonStart_clicked();
-	//void on_pushButtonStop_clicked();
-	
-	//void on_pushButtonRecoImg_clicked();
-	//void on_pushButtonRecoText_clicked();
-	//void on_pushButtonRom_clicked();
-	//void on_pushButtonPMS_clicked();
-
-	//void on_pushButtonTest_clicked();
-
-	//void showOperateForm();
-	//void imageMatchOperateFinish(QString name);
-	//void textMatchOperateFinish(QRect rect);
-	//void roomOperateFinish(QString room);
-
 private:
-	//void init();
 	void initTray();
-	//void setTreeWidget(QVector<KeyInfo> & vecPoint);
 
 private:
 	Ui::KeyRecorderClass	ui;
+	bool m_bStar;
 	MouseHook* m_pMouseHook;
 	TaskThread* m_pTaskThread;
 	QVector<KeyInfo>			m_vecPoint;
@@ -67,10 +50,4 @@ private:
 	KeyStore* m_pKeyStore;
 	ScreenGraber* m_pScreenGraber;
 	Recongnizer* m_pRecongnizer;
-
-	//QPoint m_recordBegin;
-	//QPoint m_recordEnd;
-	//QPoint m_recordPos;
-
-	FormOperate* m_pFormOperate;
 };

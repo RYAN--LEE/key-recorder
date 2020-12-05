@@ -20,16 +20,18 @@ public:
 	void play();
 	void pause();
 	void setKeyInfos(QVector<KeyInfo> vecKeyInfo);
+	bool checkScreenStatus(QString& status);
+	QString recongnizeText(QString & imgDir);
 
 signals:
 	void recongnizeValue(QString value);
 	void imageMatched(QString image, bool status);
+	void roomInputed(QString roomNum);
 
 private:
 	bool handleCondition(QString& condition);
 	void inputData(QString& data);
 	QString getTemplate(QString& status);
-	bool checkScreenStatus(QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
 

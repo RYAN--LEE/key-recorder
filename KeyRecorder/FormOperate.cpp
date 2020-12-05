@@ -1,6 +1,8 @@
 #include "FormOperate.h"
 #include "FormCaptureScreen.h"
+#include "constant.h"
 #include <QDateTime>
+#include <QTimer>
 
 FormOperate::FormOperate(QWidget *parent)
 	: QDialog(parent)
@@ -14,29 +16,37 @@ FormOperate::~FormOperate()
 
 void FormOperate::on_pushButtonImg_clicked()
 {
-	//this->parentWidget()->hide();
+	this->parentWidget()->hide();
+	this->hide();
 	m_nOperateType = ImageMatch;
+
+	QTimer::singleShot(600, this, SLOT(showCapture()));
+}
+
+void FormOperate::showCapture()
+{
 	FormCaptureScreen* pForm = new FormCaptureScreen(NULL);
 	connect(pForm, &FormCaptureScreen::signalCompleteCature, this, &FormOperate::captureFinished);
 	pForm->show();
-
 }
+
 void FormOperate::on_pushButtonText_clicked()
 {
-	//this->parentWidget()->hide();
+	this->parentWidget()->hide();
+	this->hide();
 	m_nOperateType = TextMatch;
-	FormCaptureScreen* pForm = new FormCaptureScreen(NULL);
-	connect(pForm, &FormCaptureScreen::signalCompleteCature, this, &FormOperate::captureFinished);
-	pForm->show();
+	QTimer::singleShot(600, this, SLOT(showCapture()));
 }
+
 void FormOperate::on_pushButtonRom_clicked()
 {
+	this->hide();
 	emit operateRoom("room_get");
 }
 
 void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 {
-	//this->parentWidget()->show();
+	this->parentWidget()->show();
 
 	switch (m_nOperateType)
 	{
@@ -44,7 +54,7 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 		{
 			this->hide();
 			QString name = "img_" + QDateTime::currentDateTime().toString("yyyyMMddhhmmss") + ".png";
-			QString path = "./" + name;
+			QString path = IMG_DIR + name;
 			catureImage.save(path, "png");
 			emit operateImageMatch(name);
 

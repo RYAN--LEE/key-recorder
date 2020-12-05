@@ -20,7 +20,7 @@ QString Recongnizer::DoRecongnize(const char* data, int size)
     tesseract::TessBaseAPI* api = new tesseract::TessBaseAPI();
     // Initialize tesseract-ocr with English, without specifying tessdata path
 
-    char* strPath = "D:\\Program Files\\Tesseract-OCR\\tessdata";
+    char* strPath = "./tessdata";
     if (api->Init(strPath, "chi_sim")) {
         fprintf(stderr, "Could not initialize tesseract.\n");
         exit(1);

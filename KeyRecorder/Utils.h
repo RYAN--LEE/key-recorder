@@ -7,6 +7,5 @@ class Utils
 public:
 	static QString encodeTextMatch(QRect rect);
 	static QRect decodeTextMatch(QString text);
-
 };
 

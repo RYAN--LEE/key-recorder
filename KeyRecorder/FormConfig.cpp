@@ -9,17 +9,25 @@
 #include <qtextcodec.h> 
 #include <QSystemTrayIcon>
 #include <QMenu>
+#include <QMessageBox>
+#include <QDesktopWidget>
+#include <QNetworkInterface>
 
 #include "constant.h"
 #include "ImageMacher.h"
 #include "KeyInfo.h"
 #include "Utils.h"
+#include "Configure.h"
+#include "HTTPClient.h"
 
-FormConfig::FormConfig(QWidget *parent)
+FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
 	: QWidget(parent , Qt::Dialog)
 	, m_bRecord(false)
+	, m_pTaskThread(pTaskThread)
 {
 	ui.setupUi(this);
+
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	m_pMouseHook = MouseHook::instance();
 	m_pMouseHook->setHookKey();
@@ -31,7 +39,6 @@ FormConfig::FormConfig(QWidget *parent)
 
 	m_pScreenGraber = new ScreenGraber(this);
 	m_pRecongnizer = new Recongnizer();
-
 
 	connect(m_pMouseHook, &MouseHook::mouseClicked, this, &FormConfig::recieveClicked);
 
@@ -60,6 +67,22 @@ void FormConfig::init()
 	ui.treeWidget->setColumnWidth(7, 30);
 	m_vecPoint = m_pKeyStore->getKeys();
 	setTreeWidget(m_vecPoint);
+
+	Configure* cfg = Configure::instance();
+	ui.lineEditPMS->setText(cfg->getUrl());
+	ui.lineEditPMSType->setText(cfg->getPMSType());
+	ui.lineEditGroupCode->setText(cfg->getGroupCode());
+	ui.lineEditHotelCode->setText(cfg->getHotelCode());
+	QString deviceID = cfg->getDeviceID();
+	if (deviceID.isEmpty())
+	{
+		deviceID = getMac();
+		cfg->setDeviceID(deviceID);
+	}
+	ui.labelDeviceID->setText(deviceID);
+
+	QDesktopWidget* desktop = QApplication::desktop();
+	setGeometry(desktop->width() - 550, desktop->height() - 600, 550, 460);
 }
 
 void FormConfig::changeItem(QTreeWidgetItem* item, int column)
@@ -119,33 +142,43 @@ void FormConfig::recieveClicked(long x, long y)
 {
 	ui.label->setText(QString("x:") + QString::number(x) + QString(" y:") + QString::number(y));
 
-	if (m_bRecord)
+	QTime current = QTime::currentTime();
+	int interval = 0;
+	if (!m_LastClickTime.isNull())
 	{
-		m_recordBegin = m_recordEnd;
-		m_recordEnd = m_recordPos;
-		m_recordPos = QPoint(x, y);
+		interval = m_LastClickTime.msecsTo(current);
 	}
-	else {
-		QTime current = QTime::currentTime();
-		int interval = 0;
-		if (!m_LastClickTime.isNull())
-		{
-			interval = m_LastClickTime.msecsTo(current);
-		}
 
-		m_vecPoint.push_back(KeyInfo(m_vecPoint.size(), x, y, interval, m_vecPoint.size() + 1, 0, QString("")));
-		m_LastClickTime = current;
-	}
+	m_vecPoint.push_back(KeyInfo(m_vecPoint.size(), x, y, interval, m_vecPoint.size() + 1, 0, QString("")));
+	m_LastClickTime = current;
 }
 
 void FormConfig::on_pushButtonStart_clicked()
 {
+	if (m_bRecord)
+	{
+		return;
+	}
+	m_bRecord = true;
 	m_vecPoint.clear();
 	m_pMouseHook->setHook();
 }
 
+void FormConfig::on_pushButtonCancel_clicked()
+{
+	m_bRecord = false;
+	m_vecPoint = m_pKeyStore->getKeys();
+	m_pMouseHook->unHook();
+}
+
+
 void FormConfig::on_pushButtonStop_clicked()
 {
+	if (!m_bRecord)
+	{
+		return;
+	}
+	m_bRecord = false;
 	m_pMouseHook->unHook();
 
 	if (m_vecPoint.size() > 0)
@@ -201,40 +234,71 @@ void FormConfig::roomOperateFinish(QString room)
 
 void FormConfig::on_pushButtonRecoImg_clicked()
 {
-
+	QString data = ui.lineEditRecoImg->text();
+	bool bRet = m_pTaskThread->checkScreenStatus(data);
+	ui.labelRecoImgResult->setText(bRet?"true":"false");
 }
 void FormConfig::on_pushButtonRecoText_clicked()
 {
-
+	QString data = ui.lineEditRecoText->text();
+	QString result = m_pTaskThread->recongnizeText(data);
+	ui.labelResult->setText(result);
 }
-void FormConfig::on_pushButtonRom_clicked()
-{
 
+void FormConfig::on_lineEditPMS_editingFinished()
+{
+	QString url = ui.lineEditPMS->text();
+	Configure::instance()->setUrl(url);
+}
+
+void FormConfig::on_lineEditPMSType_editingFinished()
+{
+	QString pmsType = ui.lineEditPMSType->text();
+	Configure::instance()->setPMSType(pmsType);
+}
+void FormConfig::on_lineEditGroupCode_editingFinished()
+{
+	QString groupCode = ui.lineEditGroupCode->text();
+	Configure::instance()->setGroupCode(groupCode);
+}
+void FormConfig::on_lineEditHotelCode_editingFinished()
+{
+	QString hotelCode = ui.lineEditHotelCode->text();
+	Configure::instance()->setHotelCode(hotelCode);
 }
 void FormConfig::on_pushButtonPMS_clicked()
 {
-
-}
-
-void FormConfig::on_pushButtonTest_clicked()
-{
-	QRect rect(m_recordBegin, m_recordEnd);
-	qDebug() << "record rect:" << rect;
-	QByteArray bytes;
-	m_pScreenGraber->grabScreen(rect.x(), rect.y(), rect.width(), rect.height(), bytes);
-
-	bool ok = false;
-	int nThreshold = ui.lineEditThreshold->text().toInt(&ok);
-	if (!ok) {
-		nThreshold = 100;
+	HTTPClient client;
+	QString name = ui.lineEditName->text();
+	QString cardID = ui.lineEditCardID->text();
+	QString roomNum;
+	QString strRet = client.getRoomNumber(name, cardID, roomNum);
+	if (roomNum.isEmpty())
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("获取房间号"),
+			QString::fromLocal8Bit("获取房间号失败:") + strRet);
 	}
-
-	QByteArray grayBytes;
-	ImageMacher macher;
-	macher.grayImage(bytes, grayBytes, nThreshold);
-
-	QString strResult = m_pRecongnizer->DoRecongnize(grayBytes.data(), grayBytes.count());
-
-	ui.labelResult->setText(strResult);
+	else
+	{
+		QMessageBox::information(this, QString::fromLocal8Bit("获取房间号"),
+			QString::fromLocal8Bit("获取房间号成功:") + roomNum);
+	}
 }
 
+QString FormConfig::getMac()
+{
+	QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
+	int nCnt = nets.count();
+	QString strMacAddr = "";
+	for (int i = 0; i < nCnt; i++)
+	{
+		// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
+		if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
+		{
+			strMacAddr = nets[i].hardwareAddress();
+			break;
+		}
+	}
+	qDebug() << "Mac:" << strMacAddr;
+	return strMacAddr;
+}

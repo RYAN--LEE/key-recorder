@@ -71,6 +71,7 @@ void MouseHook::clickKey(long x, long y)
     mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP,x, y, 0, 0);
     //mouse_event(WM_LBUTTONDOWN, -60, 0, 0, 0);
     //mouse_event(WM_LBUTTONUP, 0, 0, 0, 0);
+    qDebug() << "click  x: " << x << " y: " << y << endl;
 }
 
 //Ð¶ÔØ¹³×Ó

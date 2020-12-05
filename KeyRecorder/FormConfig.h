@@ -19,7 +19,7 @@ class FormConfig : public QWidget
 	Q_OBJECT
 
 public:
-	FormConfig(QWidget *parent = Q_NULLPTR);
+	FormConfig(TaskThread *pTaskThread, QWidget *parent = Q_NULLPTR);
 	~FormConfig();
 
 signals:
@@ -28,16 +28,19 @@ signals:
 public slots:
 	void recieveClicked(long x, long y);
 	void changeItem(QTreeWidgetItem* item, int column);
-
+	
 	void on_pushButtonStart_clicked();
 	void on_pushButtonStop_clicked();
+	void on_pushButtonCancel_clicked();
 
 	void on_pushButtonRecoImg_clicked();
 	void on_pushButtonRecoText_clicked();
-	void on_pushButtonRom_clicked();
-	void on_pushButtonPMS_clicked();
 
-	void on_pushButtonTest_clicked();
+	void on_lineEditPMS_editingFinished();
+	void on_lineEditPMSType_editingFinished();
+	void on_lineEditGroupCode_editingFinished();
+	void on_lineEditHotelCode_editingFinished();
+	void on_pushButtonPMS_clicked();
 
 	void showOperateForm();
 	void imageMatchOperateFinish(QString name);
@@ -47,6 +50,7 @@ public slots:
 private:
 	void init();
 	void setTreeWidget(QVector<KeyInfo>& vecPoint);
+	QString getMac();
 
 private:
 	Ui::FormConfig ui;
@@ -59,9 +63,7 @@ private:
 	Recongnizer* m_pRecongnizer;
 
 	bool m_bRecord;
-	QPoint m_recordBegin;
-	QPoint m_recordEnd;
-	QPoint m_recordPos;
 
 	FormOperate* m_pFormOperate;
+	TaskThread* m_pTaskThread;
 };
