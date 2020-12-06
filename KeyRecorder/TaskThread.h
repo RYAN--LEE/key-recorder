@@ -20,7 +20,7 @@ public:
 	void play();
 	void pause();
 	void setKeyInfos(QVector<KeyInfo> vecKeyInfo);
-	bool checkScreenStatus(QString& status);
+	bool checkScreenStatus(QString& status, QRect& matchRect);
 	QString recongnizeText(QString & imgDir);
 
 signals:
@@ -29,11 +29,12 @@ signals:
 	void roomInputed(QString roomNum);
 
 private:
-	bool handleCondition(QString& condition);
+	bool handleCondition(QString& condition, QRect& ajustRect);
 	void inputData(QString& data);
 	QString getTemplate(QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
+	void adjustPoint(QRect adjustRect, int& x, int& y);
 
 private:
 	bool m_bPlay;

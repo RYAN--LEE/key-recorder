@@ -235,7 +235,8 @@ void FormConfig::roomOperateFinish(QString room)
 void FormConfig::on_pushButtonRecoImg_clicked()
 {
 	QString data = ui.lineEditRecoImg->text();
-	bool bRet = m_pTaskThread->checkScreenStatus(data);
+	QRect matchRect;
+	bool bRet = m_pTaskThread->checkScreenStatus(data, matchRect);
 	ui.labelRecoImgResult->setText(bRet?"true":"false");
 }
 void FormConfig::on_pushButtonRecoText_clicked()

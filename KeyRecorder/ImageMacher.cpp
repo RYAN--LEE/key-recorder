@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <QDebug>
+#include <QRect>
 
 using namespace cv;
 
@@ -95,7 +96,7 @@ Mat ImageMacher::expend(Mat& roi)
 	return image;
 }
 
-bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath)
+bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath, QRect & matchRect)
 {
 	//Mat src = imread("src3.png", 1);
 	//Mat templ = imread("template2.png", 1);
@@ -112,6 +113,7 @@ bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath)
 	minMaxLoc(ftmp, &minVal, &maxVal, &minLoc, &maxLoc); //ÕÒµ½×î¼ÑÆ¥Åäµã
 	rectangle(src, Rect(minLoc.x, minLoc.y, templ.cols, templ.rows), cv::Scalar(0, 255, 0), 2, 0);
 
+	matchRect = QRect(minLoc.x, minLoc.y, templ.cols, templ.rows);
 	//imshow("src", src);
 	//imshow("template", templ);
 	//waitKey();

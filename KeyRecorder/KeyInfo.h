@@ -2,13 +2,14 @@
 #include <QString>
 #include <QStringList>
 #include <QMetaType>
+#include <QRect>
 
 class KeyInfo
 {
 public:
 	KeyInfo()
 	{
-
+		m_adjustRect = QRect();
 	}
 	KeyInfo(int id, int x, int y, int interval, int nextID, int breakID = 0, QString& condition = QString(""))
 		: m_id(id)
@@ -19,10 +20,12 @@ public:
 		, m_breakID(breakID)
 		, m_strCondition(condition)
 	{
+		m_adjustRect = QRect();
 	}
 
 	KeyInfo(QString& data)
 	{
+		m_adjustRect = QRect();
 		QStringList values = data.split(",");
 		if (values.size() < 7)
 		{
@@ -91,6 +94,8 @@ public:
 	QString m_strCondition;
 	int m_nextID;
 	int m_breakID;
+
+	QRect m_adjustRect;
 };
 
 Q_DECLARE_METATYPE(KeyInfo)

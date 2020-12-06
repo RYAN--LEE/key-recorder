@@ -94,11 +94,14 @@ void TaskThread::run()
                 QThread::msleep(next.interval());
             }
 
-            m_pMouseHook->clickKey(next.x(), next.y());
+            int x = next.x();
+            int y = next.y();
+            adjustPoint(next.m_adjustRect, x, y);
+            m_pMouseHook->clickKey(x, y);
 
             if (!next.condition().isEmpty())
             {
-                bool bRet = handleCondition(next.condition());
+                bool bRet = handleCondition(next.condition(), next.m_adjustRect);
                 int nextID = bRet ? next.m_nextID : next.m_breakID;
                 if (!keyMap.contains(nextID))
                 {
@@ -127,12 +130,23 @@ void TaskThread::run()
 	}
 }
 
-bool TaskThread::handleCondition(QString& condition)
+void TaskThread::adjustPoint(QRect adjustRect, int &x, int &y)
+{
+
+    
+}
+
+bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
 {
     if (condition.contains("img_"))
     {
         //handle img match
-        bool bRet = checkScreenStatus(condition);
+        QRect matchRect;
+        bool bRet = checkScreenStatus(condition, matchRect);
+        if (bRet)
+        {
+            ajustRect = matchRect;
+        }
         imageMatched(condition, bRet);
         return bRet;
     }
@@ -192,7 +206,7 @@ QString TaskThread::getTemplate(QString &status)
 }
 
 
-bool TaskThread::checkScreenStatus(QString &status)
+bool TaskThread::checkScreenStatus(QString &status, QRect& matchRect)
 {
     QString strTemplate = getTemplate(status);
     if (strTemplate.isEmpty())
@@ -203,7 +217,7 @@ bool TaskThread::checkScreenStatus(QString &status)
     QByteArray bytes;
     m_pScreenGraber->grabScreen(0, 0, -1, -1, bytes);
     ImageMacher mach;
-    return mach.matchImage(bytes, strTemplate);
+    return mach.matchImage(bytes, strTemplate, matchRect);
 }
 
 void TaskThread::play()

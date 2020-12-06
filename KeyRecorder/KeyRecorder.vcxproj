@@ -48,6 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <TargetName>按键回放</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

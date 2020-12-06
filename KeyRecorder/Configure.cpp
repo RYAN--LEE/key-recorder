@@ -27,6 +27,7 @@ void Configure::init()
 	if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {  // 解析未发生错误
 		if (doucment.isObject()) { // JSON 文档为对象
 			QJsonObject object = doucment.object();  // 转化为对象
+			m_strWindowName = getString(object, QString("windowName"));
 			m_strURL = getString(object, QString("url"));
 			m_strPMSType = getString(object, QString("PMSType"));
 			m_strGroupCode = getString(object, QString("GroupCode"));
@@ -61,6 +62,7 @@ void Configure::save()
 	QTextStream out(&file);
 	
 	QJsonObject json;
+	json.insert("windowName", m_strWindowName);
 	json.insert("url", m_strURL);
 	json.insert("PMSType", m_strPMSType);
 	json.insert("GroupCode", m_strGroupCode);
@@ -74,6 +76,16 @@ void Configure::save()
 	out << document.toJson(QJsonDocument::Indented);;
 
 	file.close();
+}
+
+void Configure::setWindowName(QString& name)
+{
+	m_strWindowName = name;
+	save();
+}
+QString Configure::getWindowName()
+{
+	return m_strWindowName;
 }
 
 void Configure::setUrl(QString& url)

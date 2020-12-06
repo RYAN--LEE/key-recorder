@@ -38,6 +38,8 @@ public slots:
 
 private:
 	void initTray();
+	void maxmizeWindow();
+	HWND findWindow(QString name);
 
 private:
 	Ui::KeyRecorderClass	ui;

@@ -5,16 +5,38 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyRecorder", "KeyRecorder\KeyRecorder.vcxproj", "{B4BFD721-FF12-409C-9483-86A6B24A2013}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupKeyRecord", "SetupKeyRecord\SetupKeyRecord.vdproj", "{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uninstall", "uninstall\uninstall.vcxproj", "{5F3C3063-25CD-45F0-B873-6DDA18592C9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Debug|x64.ActiveCfg = Debug|x64
 		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Debug|x64.Build.0 = Debug|x64
+		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Debug|x86.ActiveCfg = Debug|x64
 		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Release|x64.ActiveCfg = Release|x64
 		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Release|x64.Build.0 = Release|x64
+		{B4BFD721-FF12-409C-9483-86A6B24A2013}.Release|x86.ActiveCfg = Release|x64
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Debug|x64.ActiveCfg = Debug
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Debug|x86.ActiveCfg = Debug
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Debug|x86.Build.0 = Debug
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Release|x64.ActiveCfg = Release
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Release|x86.ActiveCfg = Release
+		{B4943057-7C97-4ADA-8C6A-E50D66DFFAC4}.Release|x86.Build.0 = Release
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Debug|x64.ActiveCfg = Debug|x64
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Debug|x64.Build.0 = Debug|x64
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Debug|x86.ActiveCfg = Debug|Win32
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Debug|x86.Build.0 = Debug|Win32
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Release|x64.ActiveCfg = Release|x64
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Release|x64.Build.0 = Release|x64
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Release|x86.ActiveCfg = Release|Win32
+		{5F3C3063-25CD-45F0-B873-6DDA18592C9B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

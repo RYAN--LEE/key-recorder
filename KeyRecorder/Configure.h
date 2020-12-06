@@ -12,6 +12,9 @@ public:
 	}
 
 public:
+	void setWindowName(QString& name);
+	QString getWindowName();
+
 	void setUrl(QString& url);
 	QString getUrl();
 
@@ -36,6 +39,8 @@ private:
 
 private:
 	static Configure* m_instance;
+
+	QString m_strWindowName;
 
 	QString m_strURL;
 	QString m_strPMSType;

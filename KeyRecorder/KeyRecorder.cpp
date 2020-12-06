@@ -10,11 +10,13 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QDesktopWidget>
+#include <string.h>
 
 #include "constant.h"
 #include "ImageMacher.h"
 #include "KeyInfo.h"
 #include "Utils.h"
+#include "Configure.h"
 
 
 KeyRecorder::KeyRecorder(QWidget* parent)
@@ -45,6 +47,8 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 	connect(m_pTaskThread, &TaskThread::recongnizeValue, this, &KeyRecorder::recieveRecongnizeValue);
 	connect(m_pTaskThread, &TaskThread::imageMatched, this, &KeyRecorder::recieveMatchImage);
 	connect(m_pTaskThread, &TaskThread::roomInputed, this, &KeyRecorder::recieveRoomNum);
+
+	maxmizeWindow();
 
 }
 
@@ -86,6 +90,48 @@ void KeyRecorder::initTray()
 	// 显示系统托盘提示信息
 	pSystemTray->showMessage(QString::fromLocal8Bit("托盘标题"), QString::fromLocal8Bit("托盘显示内容"));
 }
+
+HWND KeyRecorder::findWindow(QString name)
+{
+	//得到桌面窗口  
+   HWND hd=GetDesktopWindow();  
+ 
+   //得到屏幕上第一个子窗口  
+   hd=GetWindow(hd,GW_CHILD);  
+   char s[200]={0};  
+ 
+   //循环得到所有的子窗口  
+   while(hd!=NULL)  
+   {  
+       memset(s,0,200);  
+       GetWindowText(hd, (LPTSTR)s,200);
+       if (name == QString::fromStdWString((LPTSTR)s))
+       {
+		   //return hd;
+       }
+       qDebug() << "window: " << QString::fromStdWString((LPTSTR)s) << endl;
+         
+       hd=GetNextWindow(hd,GW_HWNDNEXT);  
+   }  
+ 
+   return NULL;
+}
+void KeyRecorder::maxmizeWindow()
+{
+	//QString name = Configure::instance()->getWindowName();
+	QString name = "C:\\Windows\\System32\\concrt140d.dll - Everything";
+	HWND hq = FindWindow(NULL, name.toStdWString().c_str());
+
+	//if (hq == NULL) {
+	//	hq = findWindow(name);
+	//}
+
+	if (hq != NULL)
+	{
+		ShowWindow(hq, SW_MAXIMIZE);
+	}
+}
+
 
 void KeyRecorder::recieveRecongnizeValue(QString value)
 {
