@@ -94,20 +94,23 @@ void TaskThread::run()
                 QThread::msleep(next.interval());
             }
 
-            int x = next.x();
-            int y = next.y();
-            adjustPoint(next.m_adjustRect, x, y);
-            m_pMouseHook->clickKey(x, y);
+
+            
+            m_pMouseHook->clickKey(next.m_adjustX, next.m_adjustY);
 
             if (!next.condition().isEmpty())
             {
-                bool bRet = handleCondition(next.condition(), next.m_adjustRect);
+                QRect matchRect(-1,-1,0,0);
+                bool bRet = handleCondition(next.condition(), matchRect);
                 int nextID = bRet ? next.m_nextID : next.m_breakID;
                 if (!keyMap.contains(nextID))
                 {
                     break;
                 }
+                QRect adjustRect = next.m_adjustRect;
                 next = keyMap[nextID];
+
+                adjustPoint(next, adjustRect, matchRect);
                 continue;
             }
 
@@ -130,10 +133,13 @@ void TaskThread::run()
 	}
 }
 
-void TaskThread::adjustPoint(QRect adjustRect, int &x, int &y)
+void TaskThread::adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect)
 {
-
-    
+    if (matchRect.x() >= 0 && matchRect.y() >= 0)
+    {
+        keyInfo.m_adjustX = matchRect.x() - adjustRect.x() + keyInfo.x();
+        keyInfo.m_adjustY = matchRect.y() - adjustRect.y() + keyInfo.y();
+    }
 }
 
 bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)

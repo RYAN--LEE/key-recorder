@@ -19,7 +19,7 @@ public:
 	~FormOperate();
 
 signals:
-	void operateImageMatch(QString name);
+	void operateImageMatch(QString name, QRect rect);
 	void operateTextMatch(QRect rect);
 	void operateRoom(QString room);
 

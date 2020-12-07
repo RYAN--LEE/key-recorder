@@ -56,7 +56,7 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 			QString name = "img_" + QDateTime::currentDateTime().toString("yyyyMMddhhmmss") + ".png";
 			QString path = IMG_DIR + name;
 			catureImage.save(path, "png");
-			emit operateImageMatch(name);
+			emit operateImageMatch(name, rect);
 
 			break;
 		}

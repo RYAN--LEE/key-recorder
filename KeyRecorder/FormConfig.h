@@ -7,7 +7,6 @@
 #include <QPoint>
 #include <QTime>
 #include "MouseHook.h"
-#include "FormMoreInfo.h"
 #include "ScreenGraber.h"
 #include "Recongnizer.h"
 #include "KeyStore.h"
@@ -43,7 +42,7 @@ public slots:
 	void on_pushButtonPMS_clicked();
 
 	void showOperateForm();
-	void imageMatchOperateFinish(QString name);
+	void imageMatchOperateFinish(QString name, QRect rect);
 	void textMatchOperateFinish(QRect rect);
 	void roomOperateFinish(QString room);
 

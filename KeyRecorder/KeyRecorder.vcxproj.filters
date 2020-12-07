@@ -47,9 +47,6 @@
     <ClCompile Include="MouseHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FormMoreInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageMacher.cpp">
       <Filter>opencv</Filter>
     </ClCompile>
@@ -83,6 +80,9 @@
     <ClCompile Include="HTTPClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h">
@@ -114,9 +114,6 @@
     <QtMoc Include="MouseHook.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="FormMoreInfo.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="ScreenGraber.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -137,9 +134,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="FormMoreInfo.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="KeyRecorder.ui">
       <Filter>Form Files</Filter>
     </QtUic>

@@ -118,8 +118,11 @@ HWND KeyRecorder::findWindow(QString name)
 }
 void KeyRecorder::maxmizeWindow()
 {
-	//QString name = Configure::instance()->getWindowName();
-	QString name = "C:\\Windows\\System32\\concrt140d.dll - Everything";
+	QString name = Configure::instance()->getWindowName();
+	if (name.isEmpty())
+	{
+		return;
+	}
 	HWND hq = FindWindow(NULL, name.toStdWString().c_str());
 
 	//if (hq == NULL) {

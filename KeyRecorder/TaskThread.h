@@ -34,7 +34,7 @@ private:
 	QString getTemplate(QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
-	void adjustPoint(QRect adjustRect, int& x, int& y);
+	void adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect);
 
 private:
 	bool m_bPlay;

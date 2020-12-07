@@ -7,7 +7,6 @@
 #include <QPoint>
 #include <QTime>
 #include "MouseHook.h"
-#include "FormMoreInfo.h"
 #include "ScreenGraber.h"
 #include "Recongnizer.h"
 #include "KeyStore.h"

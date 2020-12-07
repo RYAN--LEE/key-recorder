@@ -118,6 +118,10 @@ void FormConfig::changeItem(QTreeWidgetItem* item, int column)
 	{
 		info.m_strCondition = item->text(6);
 	}
+	else if (column == 8)
+	{
+		info.m_adjustRect = KeyInfo::string2Rect(item->text(8));
+	}
 	else {
 		return;
 	}
@@ -218,9 +222,10 @@ void FormConfig::showOperateForm()
 	m_pFormOperate->show();
 }
 
-void FormConfig::imageMatchOperateFinish(QString name)
+void FormConfig::imageMatchOperateFinish(QString name, QRect rect)
 {
 	ui.treeWidget->currentItem()->setText(6, name);
+	ui.treeWidget->currentItem()->setText(8, KeyInfo::rect2String(rect));
 }
 void FormConfig::textMatchOperateFinish(QRect rect)
 {

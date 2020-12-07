@@ -118,7 +118,7 @@ bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath, QRect &
 	//imshow("template", templ);
 	//waitKey();
 	
-	if (minVal < 100) {
+	if (minVal < 300) {
 		return true;
 	}
 	return false;

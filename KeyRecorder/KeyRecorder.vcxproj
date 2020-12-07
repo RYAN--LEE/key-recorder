@@ -109,10 +109,10 @@
     <ClCompile Include="Configure.cpp" />
     <ClCompile Include="FormCaptureScreen.cpp" />
     <ClCompile Include="FormConfig.cpp" />
-    <ClCompile Include="FormMoreInfo.cpp" />
     <ClCompile Include="FormOperate.cpp" />
     <ClCompile Include="HTTPClient.cpp" />
     <ClCompile Include="ImageMacher.cpp" />
+    <ClCompile Include="KeyInfo.cpp" />
     <ClCompile Include="KeyStore.cpp" />
     <ClCompile Include="MouseHook.cpp" />
     <ClCompile Include="Recongnizer.cpp" />
@@ -122,7 +122,6 @@
     <QtRcc Include="KeyRecorder.qrc" />
     <QtUic Include="FormCaptureScreen.ui" />
     <QtUic Include="FormConfig.ui" />
-    <QtUic Include="FormMoreInfo.ui" />
     <QtUic Include="FormOperate.ui" />
     <QtUic Include="KeyRecorder.ui" />
     <QtMoc Include="KeyRecorder.h" />
@@ -143,7 +142,6 @@
     <ClInclude Include="Recongnizer.h" />
     <QtMoc Include="TaskThread.h" />
     <QtMoc Include="ScreenGraber.h" />
-    <QtMoc Include="FormMoreInfo.h" />
     <QtMoc Include="MouseHook.h" />
     <ClInclude Include="ImageMacher.h" />
   </ItemGroup>
