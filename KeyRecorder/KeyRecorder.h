@@ -30,6 +30,7 @@ public slots:
 	void recieveRecongnizeValue(QString value);
 	void recieveMatchImage(QString image, bool status);
 	void recieveRoomNum(QString roomNum);
+	void recieveStatus(int step, bool success, QString result);
 
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
@@ -37,8 +38,6 @@ public slots:
 
 private:
 	void initTray();
-	void maxmizeWindow();
-	HWND findWindow(QString name);
 
 private:
 	Ui::KeyRecorderClass	ui;

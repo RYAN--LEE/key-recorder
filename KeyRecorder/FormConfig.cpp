@@ -20,6 +20,22 @@
 #include "Configure.h"
 #include "HTTPClient.h"
 
+
+enum EColumnID
+{
+	ECOLUMN_ID,
+	ECOLUMN_X,
+	ECOLUMN_Y,
+	ECOLUMN_INTERVAL,
+	ECOLUMN_ADJUST,
+	ECOLUMN_BEFORE_OPERATE,
+	ECOLUMN_BEFORE_BUTTON,
+	ECOLUMN_AFTER_OPERATE,
+	ECOLUMN_AFTER_BUTTON,
+	ECOLUMN_NEXT,
+	ECOLUMN_BREAK_NEXT,
+};
+
 FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
 	: QWidget(parent , Qt::Dialog)
 	, m_bRecord(false)
@@ -53,18 +69,20 @@ FormConfig::~FormConfig()
 {
 }
 
-
 void FormConfig::init()
 {
 	connect(ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(changeItem(QTreeWidgetItem*, int)));
-	ui.treeWidget->setColumnWidth(0, 40);
-	ui.treeWidget->setColumnWidth(1, 50);
-	ui.treeWidget->setColumnWidth(2, 50);
-	ui.treeWidget->setColumnWidth(3, 60);
-	ui.treeWidget->setColumnWidth(4, 80);
-	ui.treeWidget->setColumnWidth(5, 80);
-	ui.treeWidget->setColumnWidth(6, 100);
-	ui.treeWidget->setColumnWidth(7, 30);
+	ui.treeWidget->setColumnWidth(ECOLUMN_ID, 40);
+	ui.treeWidget->setColumnWidth(ECOLUMN_X, 50);
+	ui.treeWidget->setColumnWidth(ECOLUMN_Y, 50);
+	ui.treeWidget->setColumnWidth(ECOLUMN_INTERVAL, 60);
+	ui.treeWidget->setColumnWidth(ECOLUMN_NEXT, 80);
+	ui.treeWidget->setColumnWidth(ECOLUMN_BREAK_NEXT, 80);
+	ui.treeWidget->setColumnWidth(ECOLUMN_AFTER_OPERATE, 100);
+	ui.treeWidget->setColumnWidth(ECOLUMN_AFTER_BUTTON, 30);
+	ui.treeWidget->setColumnWidth(ECOLUMN_ADJUST, 80);
+	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_OPERATE, 80);
+	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_BUTTON, 30);
 	m_vecPoint = m_pKeyStore->getKeys();
 	setTreeWidget(m_vecPoint);
 
@@ -91,36 +109,40 @@ void FormConfig::changeItem(QTreeWidgetItem* item, int column)
 	{
 		return;
 	}
-	QVariant val = item->data(0, Qt::UserRole);
+	QVariant val = item->data(ECOLUMN_ID, Qt::UserRole);
 	KeyInfo info = val.value<KeyInfo>();
 
-	if (column == 1)
+	if (column == ECOLUMN_X)
 	{
-		info.m_x = item->text(1).toInt();
+		info.m_x = item->text(ECOLUMN_X).toInt();
 	}
-	else if (column == 2)
+	else if (column == ECOLUMN_Y)
 	{
-		info.m_y = item->text(2).toInt();
+		info.m_y = item->text(ECOLUMN_Y).toInt();
 	}
-	else if (column == 3)
+	else if (column == ECOLUMN_INTERVAL)
 	{
-		info.m_interval = item->text(3).toInt();
+		info.m_interval = item->text(ECOLUMN_INTERVAL).toInt();
 	}
-	else if (column == 4)
+	else if (column == ECOLUMN_NEXT)
 	{
-		info.m_nextID = item->text(4).toInt();
+		info.m_nextID = item->text(ECOLUMN_NEXT).toInt();
 	}
-	else if (column == 5)
+	else if (column == ECOLUMN_BREAK_NEXT)
 	{
-		info.m_breakID = item->text(5).toInt();
+		info.m_breakID = item->text(ECOLUMN_BREAK_NEXT).toInt();
 	}
-	else if (column == 6)
+	else if (column == ECOLUMN_AFTER_OPERATE)
 	{
-		info.m_strCondition = item->text(6);
+		info.m_strCondition = item->text(ECOLUMN_AFTER_OPERATE);
 	}
-	else if (column == 8)
+	else if (column == ECOLUMN_ADJUST)
 	{
-		info.m_adjustRect = KeyInfo::string2Rect(item->text(8));
+		info.m_adjustRect = KeyInfo::string2Rect(item->text(ECOLUMN_ADJUST));
+	}
+	else if (column == ECOLUMN_BEFORE_OPERATE)
+	{
+		info.m_strBeforeCondition = item->text(ECOLUMN_BEFORE_OPERATE);
 	}
 	else {
 		return;
@@ -128,7 +150,7 @@ void FormConfig::changeItem(QTreeWidgetItem* item, int column)
 
 	QVariant value = QVariant();
 	value.setValue<KeyInfo>(info);
-	item->setData(0, Qt::UserRole, value);
+	item->setData(ECOLUMN_ID, Qt::UserRole, value);
 
 	for (int i = 0; i < m_vecPoint.size(); ++i)
 	{
@@ -147,7 +169,7 @@ void FormConfig::recieveClicked(long x, long y)
 	ui.label->setText(QString("x:") + QString::number(x) + QString(" y:") + QString::number(y));
 
 	QTime current = QTime::currentTime();
-	int interval = 0;
+	int interval = 200;
 	if (!m_LastClickTime.isNull())
 	{
 		interval = m_LastClickTime.msecsTo(current);
@@ -213,28 +235,62 @@ void FormConfig::setTreeWidget(QVector<KeyInfo>& vecPoint)
 
 		QPushButton* add = new QPushButton(QString("+"), ui.treeWidget);
 		connect(add, &QPushButton::clicked, this, &FormConfig::showOperateForm);
-		ui.treeWidget->setItemWidget(item, 7, add);
+		ui.treeWidget->setItemWidget(item, ECOLUMN_AFTER_BUTTON, add);
+
+		QPushButton* addBefor = new QPushButton(QString("+"), ui.treeWidget);
+		connect(addBefor, &QPushButton::clicked, this, &FormConfig::showBeforeOperateForm);
+		ui.treeWidget->setItemWidget(item, ECOLUMN_BEFORE_BUTTON, addBefor);
 	}
 }
 
 void FormConfig::showOperateForm()
 {
+	m_pFormOperate->setType(OPERATE_AFTER);
 	m_pFormOperate->show();
 }
 
-void FormConfig::imageMatchOperateFinish(QString name, QRect rect)
+void FormConfig::showBeforeOperateForm()
 {
-	ui.treeWidget->currentItem()->setText(6, name);
-	ui.treeWidget->currentItem()->setText(8, KeyInfo::rect2String(rect));
+	m_pFormOperate->setType(OPERATE_BEFOR);
+	m_pFormOperate->show();
 }
-void FormConfig::textMatchOperateFinish(QRect rect)
+
+void FormConfig::imageMatchOperateFinish(int formType, QString name, QRect rect)
+{
+	if (formType == OPERATE_BEFOR)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_BEFORE_OPERATE, name);
+		ui.treeWidget->currentItem()->setText(ECOLUMN_ADJUST, KeyInfo::rect2String(rect));
+	} 
+	else if (formType == OPERATE_AFTER)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, name);
+		//ui.treeWidget->currentItem()->setText(ECOLUMN_ADJUST, KeyInfo::rect2String(rect));
+	}
+}
+void FormConfig::textMatchOperateFinish(int formType, QRect rect)
 {
 	QString strRect = Utils::encodeTextMatch(rect);
-	ui.treeWidget->currentItem()->setText(6, strRect);
+	if (formType == OPERATE_BEFOR)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_BEFORE_OPERATE, strRect);
+	}
+	else if (formType == OPERATE_AFTER)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, strRect);
+	}
 }
-void FormConfig::roomOperateFinish(QString room)
+void FormConfig::roomOperateFinish(int formType, QString room)
 {
-	ui.treeWidget->currentItem()->setText(6, room);
+	if (formType == OPERATE_BEFOR)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_BEFORE_OPERATE, room);
+
+	}
+	else if (formType == OPERATE_AFTER)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, room);
+	}
 }
 
 void FormConfig::on_pushButtonRecoImg_clicked()

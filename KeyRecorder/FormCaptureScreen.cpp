@@ -10,8 +10,13 @@ FormCaptureScreen::FormCaptureScreen(QWidget* parent)
 {
     m_pOK = new QPushButton(this);
     connect(m_pOK, &QPushButton::clicked, this, &FormCaptureScreen::captureEnd);
-    m_pOK->setText("OK");
+    m_pOK->setText(QString::fromLocal8Bit("确定"));
     m_pOK->hide();
+
+    m_pCancel = new QPushButton(this);
+    connect(m_pCancel, &QPushButton::clicked, this, &FormCaptureScreen::captureCancel);
+    m_pCancel->setText(QString::fromLocal8Bit("取消"));
+    m_pCancel->hide();
     // ui.setupUi(this);
     initWindow();
     loadBackgroundPixmap();
@@ -45,6 +50,12 @@ void FormCaptureScreen::mousePressEvent(QMouseEvent* event)
     {
         m_currentCaptureState = beginCaptureImage;
         m_beginPoint = event->pos();
+
+        m_pOK->setGeometry(event->pos().x(), event->pos().y(), 30, 30);
+        m_pOK->show();
+
+        m_pCancel->setGeometry(event->pos().x() + 30, event->pos().y(), 30, 30);
+        m_pCancel->show();
     }
     else if (event->button() == Qt::LeftButton && isPressPointInSelectRect(event->pos()))
     {
@@ -64,10 +75,14 @@ void FormCaptureScreen::mouseMoveEvent(QMouseEvent* event)
         update();
         m_pOK->setGeometry(event->pos().x(), event->pos().y(), 30, 30);
         m_pOK->show();
+
+        m_pCancel->setGeometry(event->pos().x() + 30, event->pos().y(), 30, 30);
+        m_pCancel->show();
     }
     else if (m_currentCaptureState == beginMoveCaptureArea)
     {
         m_endMovePoint = event->pos();
+
         update();
     }
 
@@ -180,6 +195,12 @@ void FormCaptureScreen::keyPressEvent(QKeyEvent* event)
 void FormCaptureScreen::captureEnd()
 {
     signalCompleteCature(m_capturePixmap, m_currentSelectRect);
+    close();
+}
+
+void FormCaptureScreen::captureCancel()
+{
+    emit signalCancelCature();
     close();
 }
 

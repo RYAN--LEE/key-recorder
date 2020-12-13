@@ -6,6 +6,7 @@
 
 FormOperate::FormOperate(QWidget *parent)
 	: QDialog(parent)
+	, m_nFormType(OPERATE_AFTER)
 {
 	ui.setupUi(this);
 }
@@ -14,6 +15,20 @@ FormOperate::~FormOperate()
 {
 }
 
+void FormOperate::setType(int nType)
+{
+	m_nFormType = nType;
+	if (m_nFormType == OPERATE_AFTER)
+	{
+		ui.pushButtonText->show();
+		ui.pushButtonRom->show();
+	}
+	else
+	{
+		ui.pushButtonText->hide();
+		ui.pushButtonRom->hide();
+	}
+}
 void FormOperate::on_pushButtonImg_clicked()
 {
 	this->parentWidget()->hide();
@@ -27,6 +42,7 @@ void FormOperate::showCapture()
 {
 	FormCaptureScreen* pForm = new FormCaptureScreen(NULL);
 	connect(pForm, &FormCaptureScreen::signalCompleteCature, this, &FormOperate::captureFinished);
+	connect(pForm, &FormCaptureScreen::signalCancelCature, this, &FormOperate::captureCancel);
 	pForm->show();
 }
 
@@ -41,7 +57,7 @@ void FormOperate::on_pushButtonText_clicked()
 void FormOperate::on_pushButtonRom_clicked()
 {
 	this->hide();
-	emit operateRoom("room_get");
+	emit operateRoom(m_nFormType, "room_get");
 }
 
 void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
@@ -56,14 +72,14 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 			QString name = "img_" + QDateTime::currentDateTime().toString("yyyyMMddhhmmss") + ".png";
 			QString path = IMG_DIR + name;
 			catureImage.save(path, "png");
-			emit operateImageMatch(name, rect);
+			emit operateImageMatch(m_nFormType, name, rect);
 
 			break;
 		}
 		case TextMatch:
 		{
 			this->hide();
-			emit operateTextMatch(rect);
+			emit operateTextMatch(m_nFormType, rect);
 			break;
 		}
 		case QueryRoom:
@@ -76,4 +92,10 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 			break;
 		}
 	};
+}
+
+void FormOperate::captureCancel()
+{
+	this->hide();
+	this->parentWidget()->show();
 }

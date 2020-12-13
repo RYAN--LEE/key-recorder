@@ -16,8 +16,6 @@
 #include "ImageMacher.h"
 #include "KeyInfo.h"
 #include "Utils.h"
-#include "Configure.h"
-
 
 KeyRecorder::KeyRecorder(QWidget* parent)
 	: QMainWindow(parent , Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)
@@ -44,12 +42,11 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 	m_pTaskThread->start();
 
 	connect(m_pMouseHook, &MouseHook::keyPause, this, &KeyRecorder::on_pushButtonPause_clicked);
+	connect(m_pMouseHook, &MouseHook::keyStart, this, &KeyRecorder::on_pushButtonPlay_clicked);
 	connect(m_pTaskThread, &TaskThread::recongnizeValue, this, &KeyRecorder::recieveRecongnizeValue);
 	connect(m_pTaskThread, &TaskThread::imageMatched, this, &KeyRecorder::recieveMatchImage);
 	connect(m_pTaskThread, &TaskThread::roomInputed, this, &KeyRecorder::recieveRoomNum);
-
-	maxmizeWindow();
-
+	connect(m_pTaskThread, &TaskThread::stepStatusChange, this, &KeyRecorder::recieveStatus);
 }
 
 KeyRecorder::~KeyRecorder()
@@ -91,60 +88,26 @@ void KeyRecorder::initTray()
 	pSystemTray->showMessage(QString::fromLocal8Bit("托盘标题"), QString::fromLocal8Bit("托盘显示内容"));
 }
 
-HWND KeyRecorder::findWindow(QString name)
-{
-	//得到桌面窗口  
-   HWND hd=GetDesktopWindow();  
- 
-   //得到屏幕上第一个子窗口  
-   hd=GetWindow(hd,GW_CHILD);  
-   char s[200]={0};  
- 
-   //循环得到所有的子窗口  
-   while(hd!=NULL)  
-   {  
-       memset(s,0,200);  
-       GetWindowText(hd, (LPTSTR)s,200);
-       if (name == QString::fromStdWString((LPTSTR)s))
-       {
-		   //return hd;
-       }
-       qDebug() << "window: " << QString::fromStdWString((LPTSTR)s) << endl;
-         
-       hd=GetNextWindow(hd,GW_HWNDNEXT);  
-   }  
- 
-   return NULL;
-}
-void KeyRecorder::maxmizeWindow()
-{
-	QString name = Configure::instance()->getWindowName();
-	if (name.isEmpty())
-	{
-		return;
-	}
-	HWND hq = FindWindow(NULL, name.toStdWString().c_str());
-
-	//if (hq == NULL) {
-	//	hq = findWindow(name);
-	//}
-
-	if (hq != NULL)
-	{
-		ShowWindow(hq, SW_MAXIMIZE);
-	}
-}
-
 
 void KeyRecorder::recieveRecongnizeValue(QString value)
 {
 	ui.label->setText(value);
 }
 
+void KeyRecorder::recieveStatus(int step, bool success, QString result)
+{
+	QString strSuccess = QString::fromLocal8Bit("成功");
+	QString strFailed = QString::fromLocal8Bit("失败");
+
+	QString strState = QString::fromLocal8Bit("第%1步 %2 ").arg(step).arg(success? strSuccess : strFailed) + result;
+	ui.label->setText(strState);
+}
+
+
 void KeyRecorder::recieveMatchImage(QString image, bool status)
 {
 	QString strState = status ? " true" : " false";
-	ui.label->setText(image + strState);
+	//ui.label->setText(image + strState);
 }
 
 void KeyRecorder::recieveRoomNum(QString roomNum)

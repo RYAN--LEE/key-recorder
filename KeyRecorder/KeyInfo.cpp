@@ -10,6 +10,7 @@ enum StoreKeyEnum
 	E_KEY_BREAK_ID,
 	E_KEY_CONDITION,
 	E_KEY_ADJUST,
+	E_KEY_BEFORE_CONDITION,
 
 	E_KEY_END,
 };
@@ -18,7 +19,7 @@ KeyInfo::KeyInfo()
 {
 	m_adjustRect = QRect();
 }
-KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, QString& condition)
+KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, QString& condition, QString& beforeCondition)
 	: m_id(id)
 	, m_x(x)
 	, m_y(y)
@@ -28,6 +29,7 @@ KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, QS
 	, m_nextID(nextID)
 	, m_breakID(breakID)
 	, m_strCondition(condition)
+	, m_strBeforeCondition(beforeCondition)
 {
 	m_adjustRect = QRect();
 }
@@ -50,12 +52,14 @@ KeyInfo::KeyInfo(QString& data)
 	m_strCondition = values[E_KEY_CONDITION];
 
 	m_adjustRect = string2Rect(values[E_KEY_ADJUST]);
-
+	m_strBeforeCondition = values[E_KEY_BEFORE_CONDITION];
 
 	m_adjustX = m_x;
 	m_adjustY = m_y;
 }
 
+//id,x,y,internal,nextID,  breakID, condition,adjust,beforeCondition
+//ID,X,Y,延时,     正常下一步,异常下一步,点击后操作,调整区域,识别标记
 QString KeyInfo::string()
 {
 	return QString::number(m_id) + "," +
@@ -65,7 +69,8 @@ QString KeyInfo::string()
 		QString::number(m_nextID) + "," +
 		QString::number(m_breakID) + "," +
 		m_strCondition + "," + 
-		rect2String(m_adjustRect);
+		rect2String(m_adjustRect) + "," + 
+		m_strBeforeCondition;
 }
 
 int KeyInfo::x()
@@ -81,6 +86,10 @@ int KeyInfo::y()
 int KeyInfo::interval()
 {
 	return m_interval;
+}
+QString KeyInfo::beforeCondition()
+{
+	return m_strBeforeCondition;
 }
 
 QString KeyInfo::condition()
@@ -105,11 +114,13 @@ QStringList KeyInfo::toStringList()
 		<< QString().number(m_x)
 		<< QString().number(m_y)
 		<< QString().number(m_interval)
-		<< QString().number(m_nextID)
-		<< QString().number(m_breakID)
+		<< rect2String(m_adjustRect)
+		<< m_strBeforeCondition
+		<< ""
 		<< m_strCondition
 		<< ""
-		<< rect2String(m_adjustRect)
+		<< QString().number(m_nextID)
+		<< QString().number(m_breakID)
 		;
 
 	return stringList;

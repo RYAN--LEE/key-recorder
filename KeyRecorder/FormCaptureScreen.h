@@ -23,8 +23,10 @@ public:
 
 private slots:
     void captureEnd();
+    void captureCancel();
 signals:
     void signalCompleteCature(QPixmap catureImage, QRect captureRect);
+    void signalCancelCature();
 
 private:
     void initWindow();
@@ -60,6 +62,7 @@ private:
     QRect m_currentSelectRect;
 
     QPushButton* m_pOK;
+    QPushButton* m_pCancel;
 
 private:
 	Ui::FormCaptureScreen ui;

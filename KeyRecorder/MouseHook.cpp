@@ -10,9 +10,11 @@ LRESULT CALLBACK keyProc(int nCode, WPARAM wParam, LPARAM lParam)
     qDebug() << "key:" << pkbhs->vkCode;
     if (pkbhs->vkCode == VK_F10)
     {
-     /*   void unHook();
-        qApp->quit();*/
         MouseHook::instance()->setKeyPause();
+    }
+    else if (pkbhs->vkCode == VK_F9)
+    {
+        MouseHook::instance()->setKeyStart();
     }
     return 0;//返回1表示截取消息不再传递,返回0表示不作处理,消息继续传递
 
@@ -60,11 +62,16 @@ void MouseHook::setMouseClick(long x, long y)
 {
     emit mouseClicked(x, y);
 }
+void MouseHook::setKeyStart()
+{
+    emit keyStart();
+}
 
 void MouseHook::setKeyPause()
 {
     emit keyPause();
 }
+
 void MouseHook::clickKey(long x, long y)
 {
     SetCursorPos(x, y);

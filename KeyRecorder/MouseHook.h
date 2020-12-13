@@ -19,6 +19,7 @@ public:
 	HHOOK GetKeyHook();
 
 	void setMouseClick(long x, long y);
+	void setKeyStart();
 	void setKeyPause();
 	void setHook();
 	void unHook();
@@ -33,6 +34,7 @@ public:
 
 signals:
 	void mouseClicked(long x, long y);
+	void keyStart();
 	void keyPause();
 
 private:

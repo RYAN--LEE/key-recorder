@@ -10,7 +10,8 @@ class KeyInfo
 {
 public:
 	KeyInfo();
-	KeyInfo(int id, int x, int y, int interval, int nextID, int breakID = 0, QString& condition = QString(""));
+	KeyInfo(int id, int x, int y, int interval, int nextID, 
+		int breakID = 0, QString& condition = QString(""), QString& beforeCondition = QString(""));
 	KeyInfo(QString& data);
 
 	QString string();
@@ -22,6 +23,7 @@ public:
 	int interval();
 
 	QString condition();
+	QString beforeCondition();
 
 	QStringList toStringList();
 
@@ -39,6 +41,7 @@ public:
 	QString m_strCondition;
 	int m_nextID;
 	int m_breakID;
+	QString m_strBeforeCondition;
 
 	QRect m_adjustRect;
 	int m_adjustX;

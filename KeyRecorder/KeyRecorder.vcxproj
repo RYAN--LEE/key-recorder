@@ -60,7 +60,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;.\JQLibrary\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opencv_world450.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -111,6 +111,7 @@
     <ClCompile Include="FormConfig.cpp" />
     <ClCompile Include="FormOperate.cpp" />
     <ClCompile Include="HTTPClient.cpp" />
+    <ClCompile Include="HttpServer.cpp" />
     <ClCompile Include="ImageMacher.cpp" />
     <ClCompile Include="KeyInfo.cpp" />
     <ClCompile Include="KeyStore.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="constant.h" />
     <QtMoc Include="FormConfig.h" />
     <QtMoc Include="HTTPClient.h" />
+    <ClInclude Include="HttpServer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils.h" />
     <QtMoc Include="FormOperate.h" />

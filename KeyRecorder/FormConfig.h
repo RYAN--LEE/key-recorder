@@ -42,9 +42,10 @@ public slots:
 	void on_pushButtonPMS_clicked();
 
 	void showOperateForm();
-	void imageMatchOperateFinish(QString name, QRect rect);
-	void textMatchOperateFinish(QRect rect);
-	void roomOperateFinish(QString room);
+	void showBeforeOperateForm();
+	void imageMatchOperateFinish(int formType, QString name, QRect rect);
+	void textMatchOperateFinish(int formType, QRect rect);
+	void roomOperateFinish(int formType, QString room);
 
 private:
 	void init();

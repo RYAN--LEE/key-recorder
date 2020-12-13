@@ -27,8 +27,11 @@ signals:
 	void recongnizeValue(QString value);
 	void imageMatched(QString image, bool status);
 	void roomInputed(QString roomNum);
+	void stepStatusChange(int step, bool success, QString result);
 
 private:
+	void maxmizeWindow();
+	bool beforClick(QString& condition, QRect& ajustRect);
 	bool handleCondition(QString& condition, QRect& ajustRect);
 	void inputData(QString& data);
 	QString getTemplate(QString& status);

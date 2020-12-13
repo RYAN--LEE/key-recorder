@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "constant.h"
 #include "HTTPClient.h"
+#include "Configure.h"
 #include <QDebug>
 #include <QRect>
 #include <QClipboard>
@@ -59,8 +60,26 @@ void pressKeyPaste()
     qDebug() << "press key" << endl;
 }
 
+
+void TaskThread::maxmizeWindow()
+{
+    QString name = Configure::instance()->getWindowName();
+    if (name.isEmpty())
+    {
+        return;
+    }
+    HWND hWnd = FindWindow(NULL, name.toStdWString().c_str());
+    if (hWnd != NULL)
+    {
+        ::ShowWindow(hWnd, SW_MAXIMIZE);
+        ::SetForegroundWindow(hWnd);
+        ::BringWindowToTop(hWnd);
+        ::FlashWindow(hWnd, TRUE);
+    }
+}
 void TaskThread::run()
 {
+    maxmizeWindow();
 	while (isRunning())
 	{
 		if (!m_bPlay)
@@ -81,49 +100,74 @@ void TaskThread::run()
 		m_mutex.unlock();
 
 
-        KeyInfo next = m_vecKeyInfo[0];
-		while (next.m_nextID != 0 || next.m_breakID != 0)
+        KeyInfo currStep = m_vecKeyInfo[0];
+		while (currStep.m_nextID != 0 || currStep.m_breakID != 0)
         {
             if (!m_bPlay)
             {
                 break;
             }
-            qDebug() << "playClick " << next.string() << endl;
-            if (next.interval() > 0)
+            qDebug() << "playClick " << currStep.string() << endl;
+
+            QRect matchRect(-1, -1, 0, 0);
+            bool bRet = beforClick(currStep.beforeCondition(), matchRect);
+            if (!bRet)
             {
-                QThread::msleep(next.interval());
+                emit stepStatusChange(currStep.m_id, false, QString::fromLocal8Bit("识别失败"));
+                QThread::msleep(200);
+                continue;
             }
 
+            emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("识别成功"));
+            int interval = currStep.interval();
+            if (interval == 0)
+            {
+                interval = 100;
+            }
+            QThread::msleep(interval);
 
-            
-            m_pMouseHook->clickKey(next.m_adjustX, next.m_adjustY);
+            if (!m_bPlay)
+            {
+                break;
+            }
+            adjustPoint(currStep, currStep.m_adjustRect, matchRect);
+            m_pMouseHook->clickKey(currStep.m_adjustX, currStep.m_adjustY);
+            emit stepStatusChange(currStep.m_id, true, 
+                QString::fromLocal8Bit("点击(") + QString::number(currStep.m_adjustX)+":"+ QString::number(currStep.m_adjustY) + ")");
 
-            if (!next.condition().isEmpty())
+            if (!currStep.condition().isEmpty())
             {
                 QRect matchRect(-1,-1,0,0);
-                bool bRet = handleCondition(next.condition(), matchRect);
-                int nextID = bRet ? next.m_nextID : next.m_breakID;
+                bool bRet = handleCondition(currStep.condition(), matchRect);
+                if (bRet)
+                {
+                    emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("执行成功"));
+                }
+                else
+                {
+                    emit stepStatusChange(currStep.m_id, false, QString::fromLocal8Bit("执行失败"));
+                }
+                int nextID = bRet ? currStep.m_nextID : currStep.m_breakID;
                 if (!keyMap.contains(nextID))
                 {
                     break;
                 }
-                QRect adjustRect = next.m_adjustRect;
-                next = keyMap[nextID];
+                QRect adjustRect = currStep.m_adjustRect;
+                currStep = keyMap[nextID];
 
-                adjustPoint(next, adjustRect, matchRect);
                 continue;
             }
 
-            if (next.m_nextID == 0)
+            if (currStep.m_nextID == 0)
             {
                 break;
             }
 
-            if (!keyMap.contains(next.m_nextID))
+            if (!keyMap.contains(currStep.m_nextID))
             {
                 break;
             }
-            next = keyMap[next.m_nextID];
+            currStep = keyMap[currStep.m_nextID];
             //QThread::msleep(1000);
             //inputData(QString("qwe"));
         }
@@ -142,6 +186,25 @@ void TaskThread::adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect
     }
 }
 
+bool TaskThread::beforClick(QString& condition, QRect& ajustRect)
+{
+    if (condition.contains("img_"))
+    {
+        //handle img match
+        QRect matchRect;
+        bool bRet = checkScreenStatus(condition, matchRect);
+        if (bRet)
+        {
+            ajustRect = matchRect;
+        }
+        emit imageMatched(condition, bRet);
+        return bRet;
+    }
+
+    return true;
+}
+
+
 bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
 {
     if (condition.contains("img_"))
@@ -153,7 +216,7 @@ bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
         {
             ajustRect = matchRect;
         }
-        imageMatched(condition, bRet);
+        emit imageMatched(condition, bRet);
         return bRet;
     }
     else if (condition.contains("text_"))
