@@ -27,6 +27,7 @@ signals:
 	void recongnizeValue(QString value);
 	void imageMatched(QString image, bool status);
 	void roomInputed(QString roomNum);
+	void createCardFinish(bool isSuccess);
 	void stepStatusChange(int step, bool success, QString result);
 
 private:
@@ -37,6 +38,7 @@ private:
 	QString getTemplate(QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
+	bool makeCard(QString strName, QString strID, QString roomNum);
 	void adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect);
 
 private:
@@ -49,4 +51,5 @@ private:
 
 	QString m_strName;
 	QString m_strID;
+	QString m_strRoomNum;
 };

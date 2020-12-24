@@ -30,6 +30,9 @@ public:
 	void setDeviceID(QString& strDeviceID);
 	QString getDeviceID();
 
+	void setExtraData(QString& strExtraData);
+	QString getExtraData();
+
 	static QString getString(QJsonObject& object, QString &key);
 
 private:
@@ -47,6 +50,6 @@ private:
 	QString m_strGroupCode;
 	QString m_strHotelCode;
 	QString m_strDeviceID;
-
+	QString m_strExtraData;
 };
 

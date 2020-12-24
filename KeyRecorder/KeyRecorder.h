@@ -30,8 +30,9 @@ public slots:
 	void recieveRecongnizeValue(QString value);
 	void recieveMatchImage(QString image, bool status);
 	void recieveRoomNum(QString roomNum);
+	void recieveCreateCardFinish(bool isSuccess);
 	void recieveStatus(int step, bool success, QString result);
-
+	
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
 	void on_pushButtonConfig_clicked();

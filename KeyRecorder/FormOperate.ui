@@ -35,6 +35,13 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonCard">
+     <property name="text">
+      <string>制作房卡</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

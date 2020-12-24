@@ -46,6 +46,7 @@ public slots:
 	void imageMatchOperateFinish(int formType, QString name, QRect rect);
 	void textMatchOperateFinish(int formType, QRect rect);
 	void roomOperateFinish(int formType, QString room);
+	void createCardOperateFinish(int formType, QString room);
 
 private:
 	void init();

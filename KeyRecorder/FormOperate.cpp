@@ -60,6 +60,12 @@ void FormOperate::on_pushButtonRom_clicked()
 	emit operateRoom(m_nFormType, "room_get");
 }
 
+void FormOperate::on_pushButtonCard_clicked()
+{
+	this->hide();
+	emit operateCreateCard(m_nFormType, "create_card");
+}
+
 void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 {
 	this->parentWidget()->show();
@@ -83,6 +89,11 @@ void FormOperate::captureFinished(QPixmap catureImage, QRect rect)
 			break;
 		}
 		case QueryRoom:
+		{
+			this->hide();
+			break;
+		}
+		case CreateCard:
 		{
 			this->hide();
 			break;

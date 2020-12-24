@@ -66,9 +66,20 @@ void TaskThread::maxmizeWindow()
     QString name = Configure::instance()->getWindowName();
     if (name.isEmpty())
     {
-        return;
+        //return;
     }
-    HWND hWnd = FindWindow(NULL, name.toStdWString().c_str());
+
+    QString strName = name.toLocal8Bit().data();
+    LPCWSTR wstrName;
+    if (name.isEmpty())
+    {
+        wstrName = L"旅馆业治安管理信息系统 版本号：20200501 识读核心：通用 主程序修改时间：2018-12-18 09:25:32";
+    }
+    else
+    {
+        wstrName = strName.toStdWString().c_str();
+    }
+    HWND hWnd = FindWindow(NULL, wstrName);
     if (hWnd != NULL)
     {
         ::ShowWindow(hWnd, SW_MAXIMIZE);
@@ -80,7 +91,7 @@ void TaskThread::maxmizeWindow()
 void TaskThread::run()
 {
     maxmizeWindow();
-	while (isRunning())
+    while (isRunning())
 	{
 		if (!m_bPlay)
 		{
@@ -99,7 +110,8 @@ void TaskThread::run()
         }
 		m_mutex.unlock();
 
-
+        m_strRoomNum = "";
+        bool isFirst = true;
         KeyInfo currStep = m_vecKeyInfo[0];
 		while (currStep.m_nextID != 0 || currStep.m_breakID != 0)
         {
@@ -107,29 +119,41 @@ void TaskThread::run()
             {
                 break;
             }
+
+            if (currStep.m_id == 0)
+            {
+                maxmizeWindow();
+            }
             qDebug() << "playClick " << currStep.string() << endl;
+            if (isFirst)
+            {
+                int interval = currStep.interval();
+                if (interval == 0)
+                {
+                    interval = 100;
+                }
+                QThread::msleep(interval);
+
+                if (!m_bPlay)
+                    break;
+            }
 
             QRect matchRect(-1, -1, 0, 0);
             bool bRet = beforClick(currStep.beforeCondition(), matchRect);
             if (!bRet)
             {
+                isFirst = false;
                 emit stepStatusChange(currStep.m_id, false, QString::fromLocal8Bit("识别失败"));
                 QThread::msleep(200);
                 continue;
             }
 
             emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("识别成功"));
-            int interval = currStep.interval();
-            if (interval == 0)
-            {
-                interval = 100;
-            }
-            QThread::msleep(interval);
+            isFirst = true;
 
             if (!m_bPlay)
-            {
                 break;
-            }
+
             adjustPoint(currStep, currStep.m_adjustRect, matchRect);
             m_pMouseHook->clickKey(currStep.m_adjustX, currStep.m_adjustY);
             emit stepStatusChange(currStep.m_id, true, 
@@ -230,8 +254,21 @@ bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
         QThread::msleep(200);
 
         QString roomNo = getRoomNum(m_strName, m_strID);
+        m_strRoomNum = roomNo;
         inputData(roomNo);
         emit roomInputed(roomNo);
+    }
+    else if (condition.contains("create_card"))
+    {
+        QThread::msleep(200);
+        if (m_strRoomNum.isEmpty())
+        {
+            emit createCardFinish(false);
+            return false;
+        }
+
+        bool bRet = makeCard(m_strName, m_strID, m_strRoomNum);
+        emit createCardFinish(bRet);
     }
     return true;
 }
@@ -266,7 +303,22 @@ QString TaskThread::getRoomNum(QString strName, QString strID)
     HTTPClient client;
     QString roomNum;
     QString strRet = client.getRoomNumber(strName, strID, roomNum);
-    return roomNum;
+    if (strRet == "Success")
+    {
+        return roomNum;
+    }
+    return "";
+}
+
+bool TaskThread::makeCard(QString strName, QString strID, QString roomNum)
+{
+    HTTPClient client;
+    QString strRet = client.createCard(strName, strID, roomNum);
+    if (strRet == "Success")
+    {
+        return true;
+    }
+    return false;
 }
 
 QString TaskThread::getTemplate(QString &status)

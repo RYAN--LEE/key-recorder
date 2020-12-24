@@ -46,6 +46,7 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 	connect(m_pTaskThread, &TaskThread::recongnizeValue, this, &KeyRecorder::recieveRecongnizeValue);
 	connect(m_pTaskThread, &TaskThread::imageMatched, this, &KeyRecorder::recieveMatchImage);
 	connect(m_pTaskThread, &TaskThread::roomInputed, this, &KeyRecorder::recieveRoomNum);
+	connect(m_pTaskThread, &TaskThread::createCardFinish, this, &KeyRecorder::recieveCreateCardFinish);
 	connect(m_pTaskThread, &TaskThread::stepStatusChange, this, &KeyRecorder::recieveStatus);
 }
 
@@ -113,6 +114,12 @@ void KeyRecorder::recieveMatchImage(QString image, bool status)
 void KeyRecorder::recieveRoomNum(QString roomNum)
 {
 	ui.label->setText("room:" + roomNum);
+}
+
+void KeyRecorder::recieveCreateCardFinish(bool isSuccess)
+{
+	QString text = isSuccess ? QString::fromLocal8Bit("制卡成功") : QString::fromLocal8Bit("制卡失败");
+	ui.label->setText(text);
 }
 
 void KeyRecorder::on_pushButtonPlay_clicked()

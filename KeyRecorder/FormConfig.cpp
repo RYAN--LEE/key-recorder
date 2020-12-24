@@ -61,6 +61,7 @@ FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
 	connect(m_pFormOperate, &FormOperate::operateImageMatch, this, &FormConfig::imageMatchOperateFinish);
 	connect(m_pFormOperate, &FormOperate::operateTextMatch, this, &FormConfig::textMatchOperateFinish);
 	connect(m_pFormOperate, &FormOperate::operateRoom, this, &FormConfig::roomOperateFinish);
+	connect(m_pFormOperate, &FormOperate::operateCreateCard, this, &FormConfig::createCardOperateFinish);
 
 	init();
 }
@@ -292,6 +293,20 @@ void FormConfig::roomOperateFinish(int formType, QString room)
 		ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, room);
 	}
 }
+
+void FormConfig::createCardOperateFinish(int formType, QString room)
+{
+	if (formType == OPERATE_BEFOR)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_BEFORE_OPERATE, room);
+
+	}
+	else if (formType == OPERATE_AFTER)
+	{
+		ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, room);
+	}
+}
+
 
 void FormConfig::on_pushButtonRecoImg_clicked()
 {

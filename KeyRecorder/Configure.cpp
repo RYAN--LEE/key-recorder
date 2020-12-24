@@ -20,8 +20,10 @@ void Configure::init()
 	}
 
 	QTextStream in(&file);
+	//QByteArray data;
+	//in >> data;
 	QString strData = in.readAll();
-	QByteArray data = strData.toLatin1();
+	QByteArray data = strData.toUtf8();
 	QJsonParseError jsonError;
 	QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);  // 转化为 JSON 文档
 	if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {  // 解析未发生错误
@@ -33,6 +35,7 @@ void Configure::init()
 			m_strGroupCode = getString(object, QString("GroupCode"));
 			m_strHotelCode = getString(object, QString("HotelCode"));
 			m_strDeviceID = getString(object, QString("DeviceID"));
+			m_strExtraData = getString(object, QString("ExtraData"));
 		}
 	}
 
@@ -68,6 +71,7 @@ void Configure::save()
 	json.insert("GroupCode", m_strGroupCode);
 	json.insert("HotelCode", m_strHotelCode);
 	json.insert("DeviceID", m_strDeviceID);
+	json.insert("ExtraData", m_strExtraData);
 
 	QJsonDocument document;
 	document.setObject(json);
@@ -136,4 +140,14 @@ void Configure::setDeviceID(QString& strDeviceID)
 QString Configure::getDeviceID()
 {
 	return m_strDeviceID;
+}
+
+void Configure::setExtraData(QString& strExtraData)
+{
+	m_strExtraData = strExtraData;
+	save();
+}
+QString Configure::getExtraData()
+{
+	return m_strExtraData;
 }

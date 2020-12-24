@@ -7,6 +7,35 @@
 
 QString HTTPClient::getRoomNumber(QString& name, QString& cardID, QString &roomNum)
 {
+    QByteArray qByteHttpData = makeRoomRequestJson(name, cardID);
+    QJsonObject object;
+    QString ret = sendRequest(qByteHttpData, object);
+    if (ret != "ok")
+    {
+        return ret;
+    }
+
+    QString result = Configure::getString(object, QString("Result"));
+    roomNum = Configure::getString(object, QString("RoomNum"));
+    return result;
+}
+
+QString HTTPClient::createCard(QString& name, QString& cardID, QString roomNum)
+{
+    QByteArray qByteHttpData = makeCardRequestJson(name, cardID, roomNum);
+    QJsonObject object;
+    QString ret = sendRequest(qByteHttpData, object);
+    if (ret != "ok")
+    {
+        return ret;
+    }
+
+    QString result = Configure::getString(object, QString("result"));
+    return result;
+}
+
+QString HTTPClient::sendRequest(QByteArray & qByteHttpData, QJsonObject& retJsonObject)
+{
     Configure* cfg = Configure::instance();
     QNetworkAccessManager* pHttpMgr = new QNetworkAccessManager(this);
     //设置url
@@ -18,10 +47,9 @@ QString HTTPClient::getRoomNumber(QString& name, QString& cardID, QString &roomN
     //  requestInfo.setRawHeader("Content-Type","application/json");//服务器要求的数据头部
     //  requestInfo.setRawHeader("Accept","text/json,*/*;q=0.5");//服务器要求的数据头部
 
-        //发送数据
-    QByteArray qByteHttpData = makeRequestJson(name, cardID);
+    //发送数据
     QNetworkReply* reply = pHttpMgr->post(requestInfo, qByteHttpData);
-    
+
     //connect(pHttpMgr, &QNetworkAccessManager::finished, this, &HTTPClient::replyFinished);
 
     QEventLoop eventLoop;
@@ -47,10 +75,8 @@ QString HTTPClient::getRoomNumber(QString& name, QString& cardID, QString &roomN
     if (!doucment.isObject()) { // JSON 文档为对象
         return "json parse object error";
     }
-    QJsonObject object = doucment.object();  // 转化为对象
-    QString result = Configure::getString(object, QString("result"));
-    roomNum = Configure::getString(object, QString("roomNum"));
-    return result;
+    retJsonObject = doucment.object();  // 转化为对象
+    return "ok";
 }
 
 
@@ -69,18 +95,43 @@ void HTTPClient::replyFinished(QNetworkReply* reply)
     }
 }
 
-QByteArray HTTPClient::makeRequestJson(QString &name, QString& cardID)
+QByteArray HTTPClient::makeRoomRequestJson(QString &name, QString& cardID)
 {
     Configure* cfg = Configure::instance();
     QJsonObject json;
-    json.insert("Type", "001");
+    json.insert("Type", "P01");
+    json.insert("Index", 1);
+    json.insert("PMSType", cfg->getPMSType());
+    json.insert("GroupCode", cfg->getGroupCode());
+    json.insert("HotelCode", cfg->getHotelCode());
+    json.insert("Name", name);
+    json.insert("CardID", cardID);
+    json.insert("DeviceID", cfg->getDeviceID());
+    json.insert("SendTime", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+    QJsonDocument document;
+    document.setObject(json);
+    return document.toJson(QJsonDocument::Indented);
+}
+
+QByteArray HTTPClient::makeCardRequestJson(QString& name, QString& cardID, QString& roomNum)
+{
+    Configure* cfg = Configure::instance();
+    QJsonObject json;
+    json.insert("Type", "P03");
     json.insert("Index", 1);
     json.insert("PMSType", cfg->getPMSType());
     json.insert("GroupCode", cfg->getGroupCode());
     json.insert("Name", name);
     json.insert("CardID", cardID);
+    json.insert("RoomNum", roomNum);
     json.insert("DeviceID", cfg->getDeviceID());
     json.insert("SendTime", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+    QJsonObject extraJson;
+    extraJson.insert("Account", cfg->getExtraData());
+
+    json.insert("ExtData", extraJson);
 
     QJsonDocument document;
     document.setObject(json);

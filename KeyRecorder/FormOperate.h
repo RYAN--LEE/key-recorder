@@ -9,6 +9,7 @@ enum OperateType {
 	ImageMatch,
 	TextMatch,
 	QueryRoom,
+	CreateCard,
 };
 
 enum FormType {
@@ -29,11 +30,13 @@ signals:
 	void operateImageMatch(int formType, QString name, QRect rect);
 	void operateTextMatch(int formType, QRect rect);
 	void operateRoom(int formType, QString room);
+	void operateCreateCard(int formType, QString room);
 
 public slots:
 	void on_pushButtonImg_clicked();
 	void on_pushButtonText_clicked();
 	void on_pushButtonRom_clicked();
+	void on_pushButtonCard_clicked();
 
 	void captureFinished(QPixmap catureImage, QRect rect);
 	void captureCancel();
