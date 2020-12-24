@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QByteArray>
+#include <QDir>
 
 
 Configure::Configure()
@@ -13,6 +14,14 @@ Configure::Configure()
 
 void Configure::init()
 {
+	QDir* folder = new QDir;
+	bool exist = folder->exists(CONFIG_DIR);
+	if (!exist)
+	{
+		folder->mkdir(CONFIG_DIR);
+		folder->mkdir(IMG_DIR);
+	}
+
 	QFile file(FILE_CFG);
 	if (!file.open(QFile::ReadOnly | QIODevice::Text))
 	{
