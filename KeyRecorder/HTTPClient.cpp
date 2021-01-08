@@ -1,15 +1,20 @@
 #include "HTTPClient.h"
 #include "Configure.h"
+#include "constant.h"
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
 #include <QEventLoop>
+#include <QTimer>
 
 
 QString HTTPClient::getRoomNumber(QString& name, QString& cardID, QString &roomNum)
 {
     QByteArray qByteHttpData = makeRoomRequestJson(name, cardID);
     QJsonObject object;
-    QString ret = sendRequest(qByteHttpData, object);
+    Configure* cfg = Configure::instance();
+    QString url = cfg->getUrl() + "/" + API_GET_ROOM_NUM;
+
+    QString ret = sendRequest(url, qByteHttpData, object);
     if (ret != "ok")
     {
         return ret;
@@ -24,22 +29,23 @@ QString HTTPClient::createCard(QString& name, QString& cardID, QString roomNum)
 {
     QByteArray qByteHttpData = makeCardRequestJson(name, cardID, roomNum);
     QJsonObject object;
-    QString ret = sendRequest(qByteHttpData, object);
+
+    Configure* cfg = Configure::instance();
+    QString url = cfg->getUrl() + "/" + API_CREATE_CARD;
+
+    QString ret = sendRequest(url, qByteHttpData, object);
     if (ret != "ok")
     {
         return ret;
     }
 
-    QString result = Configure::getString(object, QString("result"));
+    QString result = Configure::getString(object, QString("Result"));
     return result;
 }
 
-QString HTTPClient::sendRequest(QByteArray & qByteHttpData, QJsonObject& retJsonObject)
+QString HTTPClient::sendRequest(QString &url, QByteArray & qByteHttpData, QJsonObject& retJsonObject)
 {
-    Configure* cfg = Configure::instance();
     QNetworkAccessManager* pHttpMgr = new QNetworkAccessManager(this);
-    //设置url
-    QString url = cfg->getUrl();
     //设置头信息
     QNetworkRequest requestInfo;
     requestInfo.setUrl(QUrl(url));
@@ -52,10 +58,20 @@ QString HTTPClient::sendRequest(QByteArray & qByteHttpData, QJsonObject& retJson
 
     //connect(pHttpMgr, &QNetworkAccessManager::finished, this, &HTTPClient::replyFinished);
 
+    QTimer timer;
+    timer.setInterval(3000);
+    timer.setSingleShot(true);
+    timer.start();
+
     QEventLoop eventLoop;
+    connect(&timer, SIGNAL(timeout()), &eventLoop, SLOT(quit()));
     connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
     eventLoop.exec();
 
+    if (!timer.isActive()) {
+        return "time out!";
+    }
+    timer.stop();
     //错误处理
     if (reply->error() != QNetworkReply::NoError)
     {

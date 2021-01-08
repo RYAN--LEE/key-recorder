@@ -104,6 +104,10 @@ bool ImageMacher::matchImage(QByteArray &srcBytes, QString &tmplatePath, QRect &
 	Mat src = cv::imdecode(pic_arr, IMREAD_COLOR);
 
 	Mat templ = imread(tmplatePath.toStdString(), 1);
+	if (templ.empty())
+	{
+		return false;
+	}
 
 	double minVal, maxVal = -1;
 	Point minLoc, maxLoc;

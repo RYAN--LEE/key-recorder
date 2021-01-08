@@ -14,7 +14,7 @@ public slots:
 	void replyFinished(QNetworkReply* reply);
 
 private:
-	QString sendRequest(QByteArray& qByteHttpData, QJsonObject& retJsonObject);
+	QString sendRequest(QString& url, QByteArray& qByteHttpData, QJsonObject& retJsonObject);
 
 private:
 	QByteArray makeRoomRequestJson(QString& name, QString& cardID);

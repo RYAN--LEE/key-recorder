@@ -12,6 +12,8 @@
 #include <QMessageBox>
 #include <QDesktopWidget>
 #include <QNetworkInterface>
+#include <QTimer>
+#include "FormPassword.h"
 
 #include "constant.h"
 #include "ImageMacher.h"
@@ -37,9 +39,10 @@ enum EColumnID
 };
 
 FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
-	: QWidget(parent , Qt::Dialog)
+	: QWidget(parent , Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)
 	, m_bRecord(false)
 	, m_pTaskThread(pTaskThread)
+	, m_bLeftBtnClk(false)
 {
 	ui.setupUi(this);
 
@@ -80,10 +83,10 @@ void FormConfig::init()
 	ui.treeWidget->setColumnWidth(ECOLUMN_NEXT, 80);
 	ui.treeWidget->setColumnWidth(ECOLUMN_BREAK_NEXT, 80);
 	ui.treeWidget->setColumnWidth(ECOLUMN_AFTER_OPERATE, 100);
-	ui.treeWidget->setColumnWidth(ECOLUMN_AFTER_BUTTON, 30);
-	ui.treeWidget->setColumnWidth(ECOLUMN_ADJUST, 80);
-	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_OPERATE, 80);
-	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_BUTTON, 30);
+	ui.treeWidget->setColumnWidth(ECOLUMN_AFTER_BUTTON, 40);
+	ui.treeWidget->setColumnWidth(ECOLUMN_ADJUST, 120);
+	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_OPERATE, 190);
+	ui.treeWidget->setColumnWidth(ECOLUMN_BEFORE_BUTTON, 40);
 	m_vecPoint = m_pKeyStore->getKeys();
 	setTreeWidget(m_vecPoint);
 
@@ -98,10 +101,14 @@ void FormConfig::init()
 		deviceID = getMac();
 		cfg->setDeviceID(deviceID);
 	}
-	ui.labelDeviceID->setText(deviceID);
+	//ui.labelDeviceID->setText(deviceID);
 
 	QDesktopWidget* desktop = QApplication::desktop();
-	setGeometry(desktop->width() - 550, desktop->height() - 600, 550, 460);
+	setGeometry(desktop->width() - 900, desktop->height() - 600, 900, 460);
+
+	ui.widgetCfg->hide();
+	ui.widgetcfgEx->hide();
+	this->setFixedHeight(200);
 }
 
 void FormConfig::changeItem(QTreeWidgetItem* item, int column)
@@ -180,6 +187,41 @@ void FormConfig::recieveClicked(long x, long y)
 	m_LastClickTime = current;
 }
 
+void FormConfig::on_pushButtonAbort_clicked()
+{
+	QMessageBox::information(this, QString::fromLocal8Bit("关于"),
+		QString::fromLocal8Bit("版本信息：v1.0.0"));
+}
+void FormConfig::on_pushButtonClose_clicked()
+{
+	this->close();
+}
+
+void FormConfig::showCfg()
+{
+	ui.widgetCfg->show();
+	this->setFixedHeight(600);
+}
+
+void FormConfig::closePwd()
+{
+	ui.checkBoxMore->setCheckState(Qt::Unchecked);
+}
+void FormConfig::on_checkBoxMore_stateChanged(int state)
+{
+	if (state == Qt::Checked)
+	{
+		FormPassword* pwd = new FormPassword(this);
+		connect(pwd, SIGNAL(verifySuccess()), this, SLOT(showCfg()));
+		connect(pwd, SIGNAL(verifyFailed()), this, SLOT(closePwd()));
+		pwd->show();
+	}
+	else
+	{
+		ui.widgetCfg->hide();
+		this->setFixedHeight(200);
+	}
+}
 void FormConfig::on_pushButtonStart_clicked()
 {
 	if (m_bRecord)
@@ -362,6 +404,25 @@ void FormConfig::on_pushButtonPMS_clicked()
 	}
 }
 
+void FormConfig::on_pushButtonCreateCard_clicked()
+{
+	HTTPClient client;
+	QString name = ui.lineEditName->text();
+	QString cardID = ui.lineEditCardID->text();
+	QString roomNum = ui.lineEditRoomNum->text();
+	QString strRet = client.createCard(name, cardID, roomNum);
+	if (roomNum=="Success")
+	{
+		QMessageBox::information(this, QString::fromLocal8Bit("制卡"),
+			QString::fromLocal8Bit("制卡成功:") + roomNum);
+	}
+	else
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("制卡"),
+			QString::fromLocal8Bit("制卡失败:") + strRet); 
+	}
+}
+
 QString FormConfig::getMac()
 {
 	QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
@@ -378,4 +439,46 @@ QString FormConfig::getMac()
 	}
 	qDebug() << "Mac:" << strMacAddr;
 	return strMacAddr;
+}
+
+void FormConfig::on_pushButtonInput_clicked()
+{
+	QTimer::singleShot(2000, this, SLOT(testInput()));
+}
+
+void FormConfig::testInput()
+{
+	QString str = ui.lineEditInput->text();
+	m_pTaskThread->inputData(str);
+}
+
+
+void FormConfig::mousePressEvent(QMouseEvent* event)
+{
+
+	if (event->button() == Qt::LeftButton &&
+		ui.widgetTitle->frameGeometry().contains(event->globalPos() - this->frameGeometry().topLeft())) {
+		m_Press = event->globalPos();
+		m_bLeftBtnClk = true;
+	}
+	event->ignore();//表示继续向下传递事件，其他的控件还可以去获取
+}
+
+void FormConfig::mouseReleaseEvent(QMouseEvent* event)
+{
+
+	if (event->button() == Qt::LeftButton) {
+		m_bLeftBtnClk = false;
+	}
+	event->ignore();
+}
+
+void FormConfig::mouseMoveEvent(QMouseEvent* event)
+{
+	if (m_bLeftBtnClk) {
+		m_Move = event->globalPos();
+		this->move(this->pos() + m_Move - m_Press);
+		m_Press = m_Move;
+	}
+	event->ignore();
 }

@@ -6,6 +6,8 @@
 #include <QVector>
 #include <QPoint>
 #include <QTime>
+#include <QMouseEvent>
+#include <QSystemTrayIcon>
 #include "MouseHook.h"
 #include "ScreenGraber.h"
 #include "Recongnizer.h"
@@ -32,11 +34,20 @@ public slots:
 	void recieveRoomNum(QString roomNum);
 	void recieveCreateCardFinish(bool isSuccess);
 	void recieveStatus(int step, bool success, QString result);
-	
+	void showMsg(QString title, QString info);
+
+	void onActivated(QSystemTrayIcon::ActivationReason reason);
+
 	void on_pushButtonPlay_clicked();
 	void on_pushButtonPause_clicked();
 	void on_pushButtonConfig_clicked();
+	void on_pushButtonClose_clicked();
 
+
+protected:
+	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 private:
 	void initTray();
 
@@ -51,4 +62,8 @@ private:
 	KeyStore* m_pKeyStore;
 	ScreenGraber* m_pScreenGraber;
 	Recongnizer* m_pRecongnizer;
+
+	bool m_bLeftBtnClk;
+	QPoint m_Press;
+	QPoint m_Move;
 };

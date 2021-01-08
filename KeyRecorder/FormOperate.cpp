@@ -22,11 +22,13 @@ void FormOperate::setType(int nType)
 	{
 		ui.pushButtonText->show();
 		ui.pushButtonRom->show();
+		ui.pushButtonCard->show();
 	}
 	else
 	{
 		ui.pushButtonText->hide();
 		ui.pushButtonRom->hide();
+		ui.pushButtonCard->hide();
 	}
 }
 void FormOperate::on_pushButtonImg_clicked()

@@ -1,5 +1,13 @@
 <RCC>
-    <qresource prefix="/icon">
-        <file>logo.png</file>
-    </qresource>
+  <qresource prefix="/icon">
+    <file>logo/check_off.png</file>
+    <file>logo/check_on.png</file>
+    <file>logo/abort.png</file>
+    <file>logo/close1.png</file>
+    <file>logo/bk.png</file>
+    <file>logo/close.png</file>
+    <file>logo/play.png</file>
+    <file>logo/stop.png</file>
+    <file>logo.png</file>
+  </qresource>
 </RCC>

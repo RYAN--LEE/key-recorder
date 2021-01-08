@@ -12,7 +12,6 @@ public:
 	}
 
 public:
-	void setWindowName(QString& name);
 	QString getWindowName();
 
 	void setUrl(QString& url);
@@ -39,6 +38,8 @@ private:
 	Configure();
 	void init();
 	void save();
+
+	void initWindowName();
 
 private:
 	static Configure* m_instance;

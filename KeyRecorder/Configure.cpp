@@ -10,6 +10,7 @@
 Configure::Configure()
 {
 	init();
+	initWindowName();
 }
 
 void Configure::init()
@@ -29,8 +30,6 @@ void Configure::init()
 	}
 
 	QTextStream in(&file);
-	//QByteArray data;
-	//in >> data;
 	QString strData = in.readAll();
 	QByteArray data = strData.toUtf8();
 	QJsonParseError jsonError;
@@ -38,7 +37,7 @@ void Configure::init()
 	if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {  // 解析未发生错误
 		if (doucment.isObject()) { // JSON 文档为对象
 			QJsonObject object = doucment.object();  // 转化为对象
-			m_strWindowName = getString(object, QString("windowName"));
+			//m_strWindowName = getString(object, QString("windowName"));
 			m_strURL = getString(object, QString("url"));
 			m_strPMSType = getString(object, QString("PMSType"));
 			m_strGroupCode = getString(object, QString("GroupCode"));
@@ -48,6 +47,19 @@ void Configure::init()
 		}
 	}
 
+	file.close();
+}
+
+void Configure::initWindowName()
+{
+	QFile file(FILE_WINDOW_NAME);
+	if (!file.open(QFile::ReadOnly | QIODevice::Text))
+	{
+		return;
+	}
+
+	QTextStream in(&file);
+	m_strWindowName = in.readAll();
 	file.close();
 }
 
@@ -74,7 +86,7 @@ void Configure::save()
 	QTextStream out(&file);
 	
 	QJsonObject json;
-	json.insert("windowName", m_strWindowName);
+	//json.insert("windowName", m_strWindowName);
 	json.insert("url", m_strURL);
 	json.insert("PMSType", m_strPMSType);
 	json.insert("GroupCode", m_strGroupCode);
@@ -91,11 +103,6 @@ void Configure::save()
 	file.close();
 }
 
-void Configure::setWindowName(QString& name)
-{
-	m_strWindowName = name;
-	save();
-}
 QString Configure::getWindowName()
 {
 	return m_strWindowName;

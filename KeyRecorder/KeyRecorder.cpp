@@ -16,18 +16,21 @@
 #include "ImageMacher.h"
 #include "KeyInfo.h"
 #include "Utils.h"
+#include "FormInform.h"
 
 KeyRecorder::KeyRecorder(QWidget* parent)
 	: QMainWindow(parent , Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)
 	, m_bStar(false)
+	, m_bLeftBtnClk(false)
 {
 	ui.setupUi(this);
 	initTray();
 	setWindowIcon(QIcon(":/icon/logo.png"));
+	ui.labelTip->setText(QString::fromLocal8Bit("按F9开始"));
 
 
 	QDesktopWidget* desktop = QApplication::desktop();
-	setGeometry(desktop->width() - 265, desktop->height() - 115, 270, 72);
+	setGeometry(desktop->width() - 275, desktop->height() - 210, 270, 166);
 
 	m_pMouseHook = MouseHook::instance();
 	m_pMouseHook->setHookKey();
@@ -48,6 +51,7 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 	connect(m_pTaskThread, &TaskThread::roomInputed, this, &KeyRecorder::recieveRoomNum);
 	connect(m_pTaskThread, &TaskThread::createCardFinish, this, &KeyRecorder::recieveCreateCardFinish);
 	connect(m_pTaskThread, &TaskThread::stepStatusChange, this, &KeyRecorder::recieveStatus);
+	connect(m_pTaskThread, &TaskThread::showMsg, this, &KeyRecorder::showMsg);
 }
 
 KeyRecorder::~KeyRecorder()
@@ -75,7 +79,7 @@ void KeyRecorder::initTray()
 	pSystemTray->setContextMenu(menu);
 
 	// 设置系统托盘提示信息、托盘图标
-	pSystemTray->setToolTip(QString::fromLocal8Bit("按键识别录制"));
+	pSystemTray->setToolTip(QString::fromLocal8Bit("旅业智能操作辅助系统"));
 	pSystemTray->setIcon(QIcon(":/icon/logo.png"));
 
 	// 连接信号槽
@@ -89,6 +93,13 @@ void KeyRecorder::initTray()
 	pSystemTray->showMessage(QString::fromLocal8Bit("托盘标题"), QString::fromLocal8Bit("托盘显示内容"));
 }
 
+void KeyRecorder::onActivated(QSystemTrayIcon::ActivationReason reason)
+{
+	if (reason == QSystemTrayIcon::DoubleClick)
+	{
+		showNormal();
+	}
+}
 
 void KeyRecorder::recieveRecongnizeValue(QString value)
 {
@@ -113,13 +124,23 @@ void KeyRecorder::recieveMatchImage(QString image, bool status)
 
 void KeyRecorder::recieveRoomNum(QString roomNum)
 {
+	if (roomNum == "failed")
+	{
+		on_pushButtonPause_clicked();
+	}
 	ui.label->setText("room:" + roomNum);
+	//ui.labelPlayState->setText(roomNum);//todo
 }
 
 void KeyRecorder::recieveCreateCardFinish(bool isSuccess)
 {
 	QString text = isSuccess ? QString::fromLocal8Bit("制卡成功") : QString::fromLocal8Bit("制卡失败");
 	ui.label->setText(text);
+
+	if (!isSuccess)
+	{
+		on_pushButtonPause_clicked();
+	}
 }
 
 void KeyRecorder::on_pushButtonPlay_clicked()
@@ -133,7 +154,8 @@ void KeyRecorder::on_pushButtonPlay_clicked()
 	m_pTaskThread->setKeyInfos(vecPoint);
 	m_pTaskThread->play();
 
-	ui.labelPlayState->setText(QString::fromLocal8Bit("正在回放"));
+	ui.labelPlayState->setText(QString::fromLocal8Bit("回放"));
+	ui.labelTip->setText(QString::fromLocal8Bit("按F10停止"));
 }
 
 void KeyRecorder::on_pushButtonPause_clicked()
@@ -144,11 +166,53 @@ void KeyRecorder::on_pushButtonPause_clicked()
 	}
 	m_bStar = false;
 	m_pTaskThread->pause();
-	ui.labelPlayState->setText(QString::fromLocal8Bit("回放停止"));
+	ui.labelPlayState->setText(QString::fromLocal8Bit("停止"));
+	ui.labelTip->setText(QString::fromLocal8Bit("按F9开始"));
 }
 
 void KeyRecorder::on_pushButtonConfig_clicked()
 {
 	FormConfig* pFormConfig = new FormConfig(m_pTaskThread, this);
 	pFormConfig->show();
+}
+
+void KeyRecorder::on_pushButtonClose_clicked()
+{
+	this->hide();
+}
+
+void KeyRecorder::showMsg(QString title, QString info)
+{
+	FormInform::showInfo(title, info, this);
+}
+
+
+void KeyRecorder::mousePressEvent(QMouseEvent* event)
+{
+
+	if (event->button() == Qt::LeftButton &&
+		ui.widgetTitle->frameGeometry().contains(event->globalPos() - this->frameGeometry().topLeft())) {
+		m_Press = event->globalPos();
+		m_bLeftBtnClk = true;
+	}
+	event->ignore();//表示继续向下传递事件，其他的控件还可以去获取
+}
+
+void KeyRecorder::mouseReleaseEvent(QMouseEvent* event)
+{
+
+	if (event->button() == Qt::LeftButton) {
+		m_bLeftBtnClk = false;
+	}
+	event->ignore();
+}
+
+void KeyRecorder::mouseMoveEvent(QMouseEvent* event)
+{
+	if (m_bLeftBtnClk) {
+		m_Move = event->globalPos();
+		this->move(this->pos() + m_Move - m_Press);
+		m_Press = m_Move;
+	}
+	event->ignore();
 }

@@ -63,15 +63,10 @@ void pressKeyPaste()
 
 void TaskThread::maxmizeWindow()
 {
-    QString name = Configure::instance()->getWindowName();
-    if (name.isEmpty())
-    {
-        //return;
-    }
-
-    QString strName = name.toLocal8Bit().data();
+    QString strName = Configure::instance()->getWindowName();
+    // strName = name.toLocal8Bit().data();
     LPCWSTR wstrName;
-    if (name.isEmpty())
+    if (strName.isEmpty())
     {
         wstrName = L"旅馆业治安管理信息系统 版本号：20200501 识读核心：通用 主程序修改时间：2018-12-18 09:25:32";
     }
@@ -254,6 +249,13 @@ bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
         QThread::msleep(200);
 
         QString roomNo = getRoomNum(m_strName, m_strID);
+        if (roomNo.isEmpty()) 
+        {
+            emit showMsg(QString::fromLocal8Bit("错误"),
+                QString::fromLocal8Bit("获取房间失败，身份证号：") + m_strID);
+            emit roomInputed("failed");
+            return false;
+        }
         m_strRoomNum = roomNo;
         inputData(roomNo);
         emit roomInputed(roomNo);
@@ -269,6 +271,12 @@ bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
 
         bool bRet = makeCard(m_strName, m_strID, m_strRoomNum);
         emit createCardFinish(bRet);
+        if (!bRet)
+        {
+            emit showMsg(QString::fromLocal8Bit("错误"),
+                QString::fromLocal8Bit("制卡失败，身份证号：") + m_strID +
+                QString::fromLocal8Bit(" 房间号：") + m_strRoomNum);
+        }
     }
     return true;
 }
@@ -387,15 +395,18 @@ void TaskThread::inputData(QString& data)
     for (int i = 0; i < nLen; i++)
     {
         INPUT input1;
+        memset(&input1, 0, sizeof(INPUT));
         WORD vk = str[i];
         input1.type = INPUT_KEYBOARD;
         input1.ki.wVk = vk;
-        SendInput(1, &input1, sizeof(INPUT));
+        uint ret = SendInput(1, &input1, sizeof(INPUT));
+        DWORD err = GetLastError();
 
         INPUT input2;
+        memset(&input2, 0, sizeof(INPUT));
         input2.type = INPUT_KEYBOARD;
         input2.ki.wVk = vk;
         input2.ki.dwFlags = KEYEVENTF_KEYUP;
-        SendInput(1, &input2, sizeof(INPUT));
+        ret = SendInput(1, &input2, sizeof(INPUT));
     }
 }

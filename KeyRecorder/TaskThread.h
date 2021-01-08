@@ -22,6 +22,7 @@ public:
 	void setKeyInfos(QVector<KeyInfo> vecKeyInfo);
 	bool checkScreenStatus(QString& status, QRect& matchRect);
 	QString recongnizeText(QString & imgDir);
+	void inputData(QString& data);
 
 signals:
 	void recongnizeValue(QString value);
@@ -29,12 +30,12 @@ signals:
 	void roomInputed(QString roomNum);
 	void createCardFinish(bool isSuccess);
 	void stepStatusChange(int step, bool success, QString result);
+	void showMsg(QString title, QString info);
 
 private:
 	void maxmizeWindow();
 	bool beforClick(QString& condition, QRect& ajustRect);
 	bool handleCondition(QString& condition, QRect& ajustRect);
-	void inputData(QString& data);
 	QString getTemplate(QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
