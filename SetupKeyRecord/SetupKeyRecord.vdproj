@@ -1537,7 +1537,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:旅业智能操作辅助系统"
         "ProductCode" = "8:{3020C601-E303-4A29-9CBB-AA8EFD95A2DA}"
-        "PackageCode" = "8:{690F7BD9-8C40-4EF4-88CD-1BB6286D1190}"
+        "PackageCode" = "8:{E7D8BF97-A9BA-4FCC-9857-4E9FFD105590}"
         "UpgradeCode" = "8:{F6CE7C60-BACD-467C-AD96-7017697EB778}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"

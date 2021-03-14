@@ -5,6 +5,7 @@
 #include <QRect>
 #include <QObject>
 #include <QMap>
+#include "constant.h"
 
 class KeyStore : public QObject
 {
@@ -14,7 +15,10 @@ public:
 
 	//按键存储
 	bool saveKeys(QVector<KeyInfo>& vecPoint);
-	QVector<KeyInfo> getKeys();
+	QVector<KeyInfo> getKeys(QString path = FILE_KEY, int* errNo = nullptr);
+	int loadFromFile(QString& path, QVector<KeyInfo>& retPoints, QString& errMsg);
+	int copyCondition(QString& condition, QString& imgPath, QString& errMsg);
+	int copyFile(QString sourceDir, QString toDir);
 
 	//opencv识别模板
 	bool saveCVTemplate(int status, QString& strPath);

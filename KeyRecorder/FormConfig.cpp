@@ -13,6 +13,7 @@
 #include <QDesktopWidget>
 #include <QNetworkInterface>
 #include <QTimer>
+#include <QFileDialog>
 #include "FormPassword.h"
 
 #include "constant.h"
@@ -21,6 +22,8 @@
 #include "Utils.h"
 #include "Configure.h"
 #include "HTTPClient.h"
+#include "FormInform.h"
+#include "FormAbort.h"
 
 
 enum EColumnID
@@ -47,6 +50,7 @@ FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
 	ui.setupUi(this);
 
 	setAttribute(Qt::WA_DeleteOnClose);
+	setAttribute(Qt::WA_QuitOnClose, false);
 
 	m_pMouseHook = MouseHook::instance();
 	m_pMouseHook->setHookKey();
@@ -189,13 +193,16 @@ void FormConfig::recieveClicked(long x, long y)
 
 void FormConfig::on_pushButtonAbort_clicked()
 {
-	QMessageBox::information(this, QString::fromLocal8Bit("关于"),
-		QString::fromLocal8Bit("版本信息：v1.0.0"));
+	FormAbort* abort = new FormAbort(this);
+	abort->show();
+	//QMessageBox::information(this, QString::fromLocal8Bit("关于"),
+	//	QString::fromLocal8Bit("旅业智能操作辅助系统\n版本：v1.0.0"));
 }
 void FormConfig::on_pushButtonClose_clicked()
 {
 	this->close();
 }
+
 
 void FormConfig::showCfg()
 {
@@ -235,12 +242,61 @@ void FormConfig::on_pushButtonStart_clicked()
 
 void FormConfig::on_pushButtonCancel_clicked()
 {
-	m_bRecord = false;
-	m_vecPoint = m_pKeyStore->getKeys();
-	m_pMouseHook->unHook();
+	stopReord();
 }
 
 
+void FormConfig::on_pushButtonLoad_clicked()
+{
+	stopReord();
+
+	QString title = QString::fromLocal8Bit("打开按键配置文件");
+	QFileDialog* fileDialog = new QFileDialog(this);
+	//定义文件对话框标题
+	fileDialog->setWindowTitle(title);
+	//设置默认文件路径
+	fileDialog->setDirectory(CONFIG_DIR);
+	//设置文件过滤器
+	fileDialog->setNameFilter("text(" + CFG_KEY +")");
+	//设置可以选择多个文件,默认为只能选择一个文件QFileDialog::ExistingFiles
+	fileDialog->setFileMode(QFileDialog::ExistingFile);
+	//设置视图模式
+	fileDialog->setViewMode(QFileDialog::Detail);
+	if (fileDialog->exec())
+	{
+		QStringList  fileNames = fileDialog->selectedFiles();
+		qDebug() << fileNames << endl;
+		if (fileNames.empty())
+		{
+			return;
+		}
+
+		QVector<KeyInfo> vecPoint;
+		QString errMsg;
+		int nRet = m_pKeyStore->loadFromFile(fileNames[0], vecPoint, errMsg);
+		if (nRet == 1)
+		{
+			return;
+		}
+		if (nRet != 0)
+		{
+			FormInform::showInfo(title, QString::fromLocal8Bit("加载配置文件失败,错误信息：\n") + errMsg, this);
+			return;
+		}
+
+		setTreeWidget(vecPoint);
+	}
+}
+
+void FormConfig::stopReord()
+{
+	if (m_bRecord)
+	{
+		m_bRecord = false;
+		m_pMouseHook->unHook();
+		m_vecPoint = m_pKeyStore->getKeys();
+	}
+}
 void FormConfig::on_pushButtonStop_clicked()
 {
 	if (!m_bRecord)

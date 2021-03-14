@@ -16,10 +16,16 @@ Configure::Configure()
 void Configure::init()
 {
 	QDir* folder = new QDir;
-	bool exist = folder->exists(CONFIG_DIR);
-	if (!exist)
+	if (!folder->exists(HOME_DIR))
+	{
+		folder->mkdir(HOME_DIR);
+	}
+	if (!folder->exists(CONFIG_DIR))
 	{
 		folder->mkdir(CONFIG_DIR);
+	}
+	if (!folder->exists(IMG_DIR))
+	{
 		folder->mkdir(IMG_DIR);
 	}
 

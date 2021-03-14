@@ -2,7 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
-#include "constant.h"
+#include <QDir>
 
 KeyStore::KeyStore(QObject* parent)
 	:QObject(parent)
@@ -35,24 +35,129 @@ bool KeyStore::saveKeys(QVector<KeyInfo>& vecPoint)
 	return true;
 }
 
-QVector<KeyInfo> KeyStore::getKeys()
+QVector<KeyInfo> KeyStore::getKeys(QString path, int* errNo)
 {
 	QVector<KeyInfo> vecPoint;
 
-	QFile file(FILE_KEY, this);
+	QFile file(path, this);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		if (errNo != nullptr)
+		{
+			*errNo = -1;
+		}
 		return vecPoint;
+	}
 
 	QTextStream in(&file);
 	while (!in.atEnd())
 	{
 		QString data = in.readLine();
 		KeyInfo keyInfo(data);
+		if (keyInfo.m_id == -1)
+		{
+			if (errNo != nullptr)
+			{
+				*errNo = -2;
+			}
+			continue;
+		}
 		vecPoint.push_back(keyInfo);
 	}
 	file.close();
 
 	return vecPoint;
+}
+
+int KeyStore::loadFromFile(QString& path, QVector<KeyInfo>& retPoints, QString& errMsg)
+{
+	path.replace("\\", "/");
+	if (path == FILE_KEY)
+	{
+		return 1;
+	}
+	int nRet = 0;
+	QVector<KeyInfo> vecPoint = getKeys(path, &nRet);
+	if (vecPoint.isEmpty())
+	{
+		if (nRet == -1)
+		{
+			errMsg = QString::fromLocal8Bit("文件打开失败");
+		}
+		else if (nRet == -2)
+		{
+			errMsg = QString::fromLocal8Bit("配置参数无效");
+		}
+		else
+		{
+			errMsg = QString::fromLocal8Bit("配置为空");
+		}
+		return -1;
+	}
+
+	QString imgPath = path.left(path.lastIndexOf("/")) + "/image/";
+	for (int i = 0; i < vecPoint.size(); ++i)
+	{
+		KeyInfo key = vecPoint[i];
+		nRet = copyCondition(key.beforeCondition(), imgPath, errMsg);
+		if (nRet != 0)
+		{
+			return nRet;
+		}
+
+		nRet = copyCondition(key.condition(), imgPath, errMsg);
+		if (nRet != 0)
+		{
+			return nRet;
+		}
+	}
+
+	saveKeys(vecPoint);
+	for (int i = 0; i < vecPoint.size(); ++i)
+	{
+		retPoints.push_back(vecPoint[i]);
+	}
+	return 0;
+}
+int KeyStore::copyCondition(QString& condition, QString& imgPath, QString& errMsg)
+{
+	if (condition.contains("img_"))
+	{
+		int nCPRet = copyFile(imgPath + condition, IMG_DIR + condition);
+		if (nCPRet != 0)
+		{
+			if (nCPRet == -1)
+			{
+				errMsg = QString::fromLocal8Bit("图片文件不存在\n") + imgPath + condition;
+			}
+			else if (nCPRet == -2)
+			{
+				errMsg = QString::fromLocal8Bit("复制图片失败\n") + imgPath + condition;
+			}
+			return -2;
+		}
+	}
+
+	return 0;
+}
+int KeyStore::copyFile(QString sourceDir, QString toDir)
+{
+	if (!QFile::exists(sourceDir)) {
+		return -1;
+	}
+	QDir* createfile = new QDir;
+	bool exist = createfile->exists(toDir);
+	if (exist) {
+		createfile->remove(toDir);
+	}
+
+	if (!QFile::copy(sourceDir, toDir))
+	{
+		return -2;
+
+	}
+
+	return 0;
 }
 
 //opencv识别模板

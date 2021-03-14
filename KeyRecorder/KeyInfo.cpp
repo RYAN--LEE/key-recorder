@@ -40,6 +40,7 @@ KeyInfo::KeyInfo(QString& data)
 	QStringList values = data.split(",");
 	if (values.size() < E_KEY_END)
 	{
+		m_id = -1;
 		return;
 	}
 

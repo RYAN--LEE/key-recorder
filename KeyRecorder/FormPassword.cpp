@@ -10,6 +10,7 @@ FormPassword::FormPassword(QWidget *parent)
 	ui.lineEditPwd->setFocus();
 
 	ui.pushButtonOK->setShortcut(Qt::Key_Return);
+	setAttribute(Qt::WA_QuitOnClose, false);
 }
 
 FormPassword::~FormPassword()

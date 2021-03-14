@@ -38,6 +38,7 @@ public slots:
 	void on_pushButtonStart_clicked();
 	void on_pushButtonStop_clicked();
 	void on_pushButtonCancel_clicked();
+	void on_pushButtonLoad_clicked();
 
 	void on_pushButtonRecoImg_clicked();
 	void on_pushButtonRecoText_clicked();
@@ -67,6 +68,7 @@ private:
 	void init();
 	void setTreeWidget(QVector<KeyInfo>& vecPoint);
 	QString getMac();
+	void stopReord();
 
 private:
 	Ui::FormConfig ui;

@@ -14,6 +14,7 @@ FormInform::FormInform(QString title, QString info, QWidget *parent)
 	ui.labelTip->setText(info);
 	ui.pushButtonOK->setFocus();
 	ui.pushButtonOK->setDefault(true);
+	setAttribute(Qt::WA_QuitOnClose, false);
 }
 
 FormInform::~FormInform()

@@ -15,34 +15,36 @@
   </property>
   <property name="styleSheet">
    <string notr="true">
+QWidget#FormConfig{
+	background-color: rgb(63, 155, 253);
+}
 QLineEdit {
       border: 1px solid #91c1f6;
       border-radius: 3px;
       padding: 0 8px;
       background: #f2f2f2;
-  };
-
-QWidget#FormConfig{
-border: 1px solid rgb(63, 155, 253);
 };
+
+
 font: 10pt &quot;微软雅黑&quot;;
-color: rgb(59, 59, 59);</string>
+color: rgb(59, 59, 59);
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <property name="spacing">
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="topMargin">
     <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <item>
     <widget class="QWidget" name="widgetTitle" native="true">
@@ -234,8 +236,14 @@ color: rgb(254, 254, 254);</string>
       </item>
       <item>
        <widget class="Line" name="line_2">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(230, 230, 230);</string>
+        </property>
         <property name="frameShadow">
          <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>2</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -375,6 +383,22 @@ QCheckBox::indicator:checked {
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonLoad">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+      border-radius: 3px;
+      color:white;
+      background-color: rgb(63, 155, 253);
+      min-width: 80px;
+      min-height: 25px;
+  }</string>
+          </property>
+          <property name="text">
+           <string>加载配置</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -484,10 +508,28 @@ QCheckBox::indicator:checked {
   };</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="Line" name="line_3">
+           <property name="styleSheet">
+            <string notr="true">color: rgb(230, 230, 230);</string>
+           </property>
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>2</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -561,8 +603,14 @@ QCheckBox::indicator:checked {
          </item>
          <item>
           <widget class="Line" name="line_4">
+           <property name="styleSheet">
+            <string notr="true">color: rgb(230, 230, 230);</string>
+           </property>
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>2</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
