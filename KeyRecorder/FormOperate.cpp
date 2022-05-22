@@ -1,5 +1,6 @@
 #include "FormOperate.h"
 #include "FormCaptureScreen.h"
+#include "FormSelectName.h"
 #include "constant.h"
 #include <QDateTime>
 #include <QTimer>
@@ -29,8 +30,37 @@ void FormOperate::setType(int nType)
 		ui.pushButtonText->hide();
 		ui.pushButtonRom->hide();
 		ui.pushButtonCard->hide();
+		ui.pushButtonInput->hide();
+		ui.pushButtonPopup->hide();
 	}
 }
+
+void FormOperate::on_pushButtonInput_clicked()
+{
+	this->hide();
+	m_nOperateType = SelectName;
+
+	m_prefix = "input_";
+
+	QTimer::singleShot(600, this, SLOT(showSelectName()));
+}
+void FormOperate::on_pushButtonPopup_clicked()
+{
+	this->hide();
+	m_nOperateType = SelectName;
+	m_prefix = "popup_";
+
+	QTimer::singleShot(600, this, SLOT(showSelectName()));
+}
+
+void FormOperate::showSelectName()
+{
+	FormSelectName* selectName = new FormSelectName(this->parentWidget(), m_prefix);
+	connect(selectName, &FormSelectName::selectName, this, &FormOperate::selectNameFinish);
+	selectName->show();
+}
+
+
 void FormOperate::on_pushButtonImg_clicked()
 {
 	this->parentWidget()->hide();

@@ -6,14 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>229</width>
-    <height>128</height>
+    <width>193</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>添加操作</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPushButton" name="pushButtonInput">
+     <property name="text">
+      <string>输入</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonPopup">
+     <property name="text">
+      <string>下拉列表</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QPushButton" name="pushButtonImg">
      <property name="text">

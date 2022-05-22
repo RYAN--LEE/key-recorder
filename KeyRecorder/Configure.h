@@ -32,7 +32,9 @@ public:
 	void setExtraData(QString& strExtraData);
 	QString getExtraData();
 
-	static QString getString(QJsonObject& object, QString &key);
+	static QString getString(QJsonObject& object, const QString& key);
+	static int getInt(QJsonObject& object, const QString &key);
+	static QJsonObject getObject(QJsonObject& object, const QString& key);
 
 private:
 	Configure();
@@ -52,5 +54,16 @@ private:
 	QString m_strHotelCode;
 	QString m_strDeviceID;
 	QString m_strExtraData;
+
+public:
+	QString m_strLocalURLTocken;
+	QString m_strLocalURLCard;
+	QString m_strChainNum;
+	QString m_strLockNum;
+	QString m_strKey;
+	QString m_strHotelID;
+	QString m_strDeviecAlias;
+	QString m_strUser;
+	QString m_strPWD;
 };
 

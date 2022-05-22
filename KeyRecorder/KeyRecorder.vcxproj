@@ -24,7 +24,7 @@
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.18362.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">7.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -69,20 +69,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
-    <TargetName>旅业智能操作辅助系统</TargetName>
+    <TargetName>防返贫监测系统智能辅助机器人</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include;D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
-    <TargetName>旅业智能操作辅助系统</TargetName>
+    <TargetName>防返贫监测系统智能辅助机器人</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
-    <TargetName>旅业智能操作辅助系统</TargetName>
+    <TargetName>防返贫监测系统智能辅助机器人</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>D:\RyanWorkSpace\qt_workspace\opencv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
-    <TargetName>旅业智能操作辅助系统</TargetName>
+    <TargetName>防返贫监测系统智能辅助机器人</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -200,12 +200,16 @@
     <ClCompile Include="FormInform.cpp" />
     <ClCompile Include="FormOperate.cpp" />
     <ClCompile Include="FormPassword.cpp" />
+    <ClCompile Include="FormSelectName.cpp" />
     <ClCompile Include="HTTPClient.cpp" />
     <ClCompile Include="HttpServer.cpp" />
     <ClCompile Include="ImageMacher.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="StepCfg.cpp" />
     <ClCompile Include="KeyInfo.cpp" />
     <ClCompile Include="KeyStore.cpp" />
     <ClCompile Include="MouseHook.cpp" />
+    <ClCompile Include="Operate.cpp" />
     <ClCompile Include="Recongnizer.cpp" />
     <ClCompile Include="ScreenGraber.cpp" />
     <ClCompile Include="TaskThread.cpp" />
@@ -217,6 +221,7 @@
     <QtUic Include="FormInform.ui" />
     <QtUic Include="FormOperate.ui" />
     <QtUic Include="FormPassword.ui" />
+    <QtUic Include="FormSelectName.ui" />
     <QtUic Include="KeyRecorder.ui" />
     <QtMoc Include="KeyRecorder.h" />
     <ClCompile Include="KeyRecorder.cpp" />
@@ -230,7 +235,11 @@
     <QtMoc Include="FormPassword.h" />
     <QtMoc Include="FormInform.h" />
     <QtMoc Include="FormAbort.h" />
+    <QtMoc Include="FormSelectName.h" />
     <ClInclude Include="HttpServer.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="StepCfg.h" />
+    <ClInclude Include="Operate.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils.h" />
     <QtMoc Include="FormOperate.h" />

@@ -17,7 +17,7 @@ public:
 	bool saveKeys(QVector<KeyInfo>& vecPoint);
 	QVector<KeyInfo> getKeys(QString path = FILE_KEY, int* errNo = nullptr);
 	int loadFromFile(QString& path, QVector<KeyInfo>& retPoints, QString& errMsg);
-	int copyCondition(QString& condition, QString& imgPath, QString& errMsg);
+	int copyCondition(const QString& condition, const QString& imgPath, QString& errMsg);
 	int copyFile(QString sourceDir, QString toDir);
 
 	//opencvÊ¶±ðÄ£°å

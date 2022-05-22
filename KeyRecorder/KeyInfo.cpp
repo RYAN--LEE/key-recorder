@@ -1,4 +1,5 @@
 #include "KeyInfo.h"
+#include "Operate.h"
 
 enum StoreKeyEnum
 {
@@ -11,15 +12,17 @@ enum StoreKeyEnum
 	E_KEY_CONDITION,
 	E_KEY_ADJUST,
 	E_KEY_BEFORE_CONDITION,
+	E_KEY_NEED_CLICK,
 
-	E_KEY_END,
+	E_KEY_END = E_KEY_NEED_CLICK,
 };
 
 KeyInfo::KeyInfo()
 {
+	m_needClick = 1;
 	m_adjustRect = QRect();
 }
-KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, QString& condition, QString& beforeCondition)
+KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, const QString& condition, const QString& beforeCondition)
 	: m_id(id)
 	, m_x(x)
 	, m_y(y)
@@ -30,6 +33,7 @@ KeyInfo::KeyInfo(int id, int x, int y, int interval, int nextID, int breakID, QS
 	, m_breakID(breakID)
 	, m_strCondition(condition)
 	, m_strBeforeCondition(beforeCondition)
+	, m_needClick(1)
 {
 	m_adjustRect = QRect();
 }
@@ -54,6 +58,15 @@ KeyInfo::KeyInfo(QString& data)
 
 	m_adjustRect = string2Rect(values[E_KEY_ADJUST]);
 	m_strBeforeCondition = values[E_KEY_BEFORE_CONDITION];
+
+	if (values.size() > E_KEY_NEED_CLICK)
+	{
+		m_needClick = values[E_KEY_NEED_CLICK].toInt();
+	}
+	else
+	{
+		m_needClick = 1;
+	}
 
 	m_adjustX = m_x;
 	m_adjustY = m_y;
@@ -127,7 +140,7 @@ QStringList KeyInfo::toStringList()
 	return stringList;
 }
 
-QRect KeyInfo::string2Rect(QString& strRect)
+QRect KeyInfo::string2Rect(const QString& strRect)
 {
 	QRect rect;
 	QStringList strList = strRect.split("_");

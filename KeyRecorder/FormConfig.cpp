@@ -70,6 +70,8 @@ FormConfig::FormConfig(TaskThread* pTaskThread, QWidget *parent)
 	connect(m_pFormOperate, &FormOperate::operateRoom, this, &FormConfig::roomOperateFinish);
 	connect(m_pFormOperate, &FormOperate::operateCreateCard, this, &FormConfig::createCardOperateFinish);
 
+	connect(m_pFormOperate, &FormOperate::selectNameFinish, this, &FormConfig::selectNameFinish);
+
 	init();
 }
 
@@ -108,11 +110,11 @@ void FormConfig::init()
 	//ui.labelDeviceID->setText(deviceID);
 
 	QDesktopWidget* desktop = QApplication::desktop();
-	setGeometry(desktop->width() - 900, desktop->height() - 600, 900, 460);
+	//fixme setGeometry(desktop->width() - 900, desktop->height() - 600, 900, 460);
 
-	ui.widgetCfg->hide();
-	ui.widgetcfgEx->hide();
-	this->setFixedHeight(200);
+	//ui.widgetCfg->hide();
+	//ui.widgetcfgEx->hide();
+	this->setFixedHeight(600);
 }
 
 void FormConfig::changeItem(QTreeWidgetItem* item, int column)
@@ -196,7 +198,7 @@ void FormConfig::on_pushButtonAbort_clicked()
 	FormAbort* abort = new FormAbort(this);
 	abort->show();
 	//QMessageBox::information(this, QString::fromLocal8Bit("关于"),
-	//	QString::fromLocal8Bit("旅业智能操作辅助系统\n版本：v1.0.0"));
+	//	QString::fromLocal8Bit("防返贫监测系统智能辅助机器人\n版本：v1.0.0"));
 }
 void FormConfig::on_pushButtonClose_clicked()
 {
@@ -392,6 +394,11 @@ void FormConfig::roomOperateFinish(int formType, QString room)
 	}
 }
 
+void FormConfig::selectNameFinish(QString name)
+{
+	ui.treeWidget->currentItem()->setText(ECOLUMN_AFTER_OPERATE, name);
+}
+
 void FormConfig::createCardOperateFinish(int formType, QString room)
 {
 	if (formType == OPERATE_BEFOR)
@@ -466,17 +473,12 @@ void FormConfig::on_pushButtonCreateCard_clicked()
 	QString name = ui.lineEditName->text();
 	QString cardID = ui.lineEditCardID->text();
 	QString roomNum = ui.lineEditRoomNum->text();
-	QString strRet = client.createCard(name, cardID, roomNum);
-	if (roomNum=="Success")
-	{
-		QMessageBox::information(this, QString::fromLocal8Bit("制卡"),
-			QString::fromLocal8Bit("制卡成功:") + roomNum);
-	}
-	else
-	{
-		QMessageBox::warning(this, QString::fromLocal8Bit("制卡"),
-			QString::fromLocal8Bit("制卡失败:") + strRet); 
-	}
+	//QString strRet = client.createCard(name, cardID, roomNum);
+	QString strRet = client.createCardLocal(name, cardID, roomNum);
+
+	QMessageBox::information(this, QString::fromLocal8Bit("制卡"),
+			QString::fromLocal8Bit("制卡结果:") + strRet);
+
 }
 
 QString FormConfig::getMac()

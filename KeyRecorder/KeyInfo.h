@@ -5,21 +5,18 @@
 #include <QRect>
 
 
-
+class IOperate;
 class KeyInfo
 {
 public:
 	KeyInfo();
 	KeyInfo(int id, int x, int y, int interval, int nextID, 
-		int breakID = 0, QString& condition = QString(""), QString& beforeCondition = QString(""));
+		int breakID = 0, const QString& condition = QString(""), const QString& beforeCondition = QString(""));
 	KeyInfo(QString& data);
 
 	QString string();
-
 	int x();
-
 	int y();
-
 	int interval();
 
 	QString condition();
@@ -30,8 +27,9 @@ public:
 	QRect getAdjustRect();
 	void setAdjustRect(QRect rect);
 
+	void operate();
 public:
-	static QRect string2Rect(QString& strRect);
+	static QRect string2Rect(const QString& strRect);
 	static QString rect2String(QRect& rect);
 public:
 	int m_id;
@@ -46,6 +44,8 @@ public:
 	QRect m_adjustRect;
 	int m_adjustX;
 	int m_adjustY;
+
+	int m_needClick;
 };
 
 Q_DECLARE_METATYPE(KeyInfo)

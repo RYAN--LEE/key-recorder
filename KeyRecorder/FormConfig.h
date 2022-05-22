@@ -51,6 +51,8 @@ public slots:
 	void on_pushButtonPMS_clicked();
 	void on_pushButtonCreateCard_clicked();
 
+
+	void selectNameFinish(QString name);
 	void showOperateForm();
 	void showBeforeOperateForm();
 	void imageMatchOperateFinish(int formType, QString name, QRect rect);

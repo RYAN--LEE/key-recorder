@@ -119,7 +119,7 @@ int KeyStore::loadFromFile(QString& path, QVector<KeyInfo>& retPoints, QString& 
 	}
 	return 0;
 }
-int KeyStore::copyCondition(QString& condition, QString& imgPath, QString& errMsg)
+int KeyStore::copyCondition(const QString& condition, const QString& imgPath, QString& errMsg)
 {
 	if (condition.contains("img_"))
 	{

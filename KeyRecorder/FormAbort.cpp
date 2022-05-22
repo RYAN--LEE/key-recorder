@@ -9,7 +9,7 @@ FormAbort::FormAbort(QWidget *parent)
 	ui.pushButtonOK->setFocus();
 	ui.pushButtonOK->setDefault(true);
 
-	ui.labelTip->setText(QString::fromLocal8Bit("旅业智能操作辅助系统\n\n版本：v1.0.0"));
+	ui.labelTip->setText(QString::fromLocal8Bit("防返贫监测系统智能辅助机器人\n\n版本：v1.0.0"));
 	setAttribute(Qt::WA_QuitOnClose, false);
 }
 

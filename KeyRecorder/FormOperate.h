@@ -10,6 +10,7 @@ enum OperateType {
 	TextMatch,
 	QueryRoom,
 	CreateCard,
+	SelectName,
 };
 
 enum FormType {
@@ -31,8 +32,11 @@ signals:
 	void operateTextMatch(int formType, QRect rect);
 	void operateRoom(int formType, QString room);
 	void operateCreateCard(int formType, QString room);
-
+	void selectNameFinish(QString name);
 public slots:
+	void on_pushButtonInput_clicked();
+	void on_pushButtonPopup_clicked();
+
 	void on_pushButtonImg_clicked();
 	void on_pushButtonText_clicked();
 	void on_pushButtonRom_clicked();
@@ -43,10 +47,15 @@ public slots:
 
 	void showCapture();
 
+	void showSelectName();
+
 
 private:
 	Ui::FormOperate ui;
 
 	int m_nOperateType;
 	int m_nFormType;
+
+	QString m_prefix;
 };
+

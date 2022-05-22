@@ -3,10 +3,18 @@
 #include <QThread>
 #include "KeyInfo.h"
 #include "MouseHook.h"
+#include "Input.h"
 #include "Recongnizer.h"
 #include "ScreenGraber.h"
+#include "StepCfg.h"
 #include <QMutex>
 
+class TaskContentKey
+{
+public:
+	QVector<KeyInfo>		m_vecKeyInfo;
+	QMap<QString, Content>  m_contents;
+};
 class TaskThread : public QThread
 {
 	Q_OBJECT
@@ -20,9 +28,13 @@ public:
 	void play();
 	void pause();
 	void setKeyInfos(QVector<KeyInfo> vecKeyInfo);
-	bool checkScreenStatus(QString& status, QRect& matchRect);
+	bool checkScreenStatus(const QString& status, QRect& matchRect);
 	QString recongnizeText(QString & imgDir);
 	void inputData(QString& data);
+
+	void clearTask();
+	void addTask(TaskContentKey taskInfo);
+	void executTask(TaskContentKey& task);
 
 signals:
 	void recongnizeValue(QString value);
@@ -34,9 +46,11 @@ signals:
 
 private:
 	void maxmizeWindow();
-	bool beforClick(QString& condition, QRect& ajustRect);
-	bool handleCondition(QString& condition, QRect& ajustRect);
-	QString getTemplate(QString& status);
+	bool beforClick(const QString& condition, QRect& ajustRect);
+	bool handleCondition(KeyInfo& curStep, QMap<QString, Content>& curContent, QRect& ajustRect);
+	bool handleInput(KeyInfo& curStep, QMap<QString, Content>& curContent, QRect& ajustRect);
+	bool handlePopup(KeyInfo& curStep, QMap<QString, Content>& curContent, QRect& ajustRect);
+	QString getTemplate(const QString& status);
 
 	QString getRoomNum(QString strName, QString strID);
 	bool makeCard(QString strName, QString strID, QString roomNum);
@@ -53,4 +67,10 @@ private:
 	QString m_strName;
 	QString m_strID;
 	QString m_strRoomNum;
+
+	Input* m_pInput;
+	//QMap<QString, Content> m_mapCurentContents;
+	//QList<QMap<QString, Content> > m_tasks;
+
+	QList<TaskContentKey>  m_tasks;
 };

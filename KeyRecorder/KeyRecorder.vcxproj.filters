@@ -95,6 +95,18 @@
     <ClCompile Include="FormAbort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Operate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StepCfg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormSelectName.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h">
@@ -122,6 +134,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HttpServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StepCfg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -156,6 +177,9 @@
     <QtMoc Include="FormAbort.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="FormSelectName.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="KeyRecorder.ui">
@@ -177,6 +201,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="FormAbort.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FormSelectName.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

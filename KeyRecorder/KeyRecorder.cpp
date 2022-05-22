@@ -17,6 +17,7 @@
 #include "KeyInfo.h"
 #include "Utils.h"
 #include "FormInform.h"
+#include "StepCfg.h"
 
 KeyRecorder::KeyRecorder(QWidget* parent)
 	: QMainWindow(parent , Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint)
@@ -30,7 +31,7 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 
 
 	QDesktopWidget* desktop = QApplication::desktop();
-	setGeometry(desktop->width() - 275, desktop->height() - 210, 270, 166);
+	//fixme setGeometry(desktop->width() - 275, desktop->height() - 210, 270, 166);
 
 	m_pMouseHook = MouseHook::instance();
 	m_pMouseHook->setHookKey();
@@ -52,6 +53,8 @@ KeyRecorder::KeyRecorder(QWidget* parent)
 	connect(m_pTaskThread, &TaskThread::createCardFinish, this, &KeyRecorder::recieveCreateCardFinish);
 	connect(m_pTaskThread, &TaskThread::stepStatusChange, this, &KeyRecorder::recieveStatus);
 	connect(m_pTaskThread, &TaskThread::showMsg, this, &KeyRecorder::showMsg);
+
+	StepCfg::instance()->init();
 }
 
 KeyRecorder::~KeyRecorder()
@@ -79,7 +82,7 @@ void KeyRecorder::initTray()
 	pSystemTray->setContextMenu(menu);
 
 	// 设置系统托盘提示信息、托盘图标
-	pSystemTray->setToolTip(QString::fromLocal8Bit("旅业智能操作辅助系统"));
+	pSystemTray->setToolTip(QString::fromLocal8Bit("防返贫监测系统智能辅助机器人"));
 	pSystemTray->setIcon(QIcon(":/icon/logo.png"));
 
 	// 连接信号槽
@@ -145,13 +148,47 @@ void KeyRecorder::recieveCreateCardFinish(bool isSuccess)
 
 void KeyRecorder::on_pushButtonPlay_clicked()
 {
+	int addY[] = {618, 500, 523};
 	if (m_bStar)
 	{
 		return;
 	}
 	m_bStar = true;
-	QVector<KeyInfo> vecPoint = m_pKeyStore->getKeys();
+	m_pTaskThread->clearTask();
+
+	QVector<KeyInfo> vecPointBase = m_pKeyStore->getKeys(FILE_KEY_BASE);
+	QVector<KeyInfo> vecPoint = m_pKeyStore->getKeys(FILE_KEY_PEOPLE);
+	QVector<KeyInfo> vecPointDet = m_pKeyStore->getKeys(FILE_KEY_DETECT);
+
 	m_pTaskThread->setKeyInfos(vecPoint);
+	QVector<Household> households = StepCfg::instance()->getContentMaps();
+	for (int i = 0; i < households.size(); i++)
+	{
+		Household h = households[i];
+		TaskContentKey taskInfoBase;
+		taskInfoBase.m_vecKeyInfo = vecPointBase;
+		taskInfoBase.m_contents = h.m_mapBaseData;
+		m_pTaskThread->addTask(taskInfoBase);
+
+		for (int j = 0; j < h.m_vecPepleData.size(); j++)
+		{
+			TaskContentKey taskInfo;
+			taskInfo.m_vecKeyInfo = vecPoint;
+			if (j < sizeof(addY) / sizeof(int))
+			{
+				taskInfo.m_vecKeyInfo[1].m_adjustY = addY[j];
+				taskInfo.m_vecKeyInfo[1].m_y = addY[j];
+			}
+			taskInfo.m_contents = h.m_vecPepleData[j];
+			m_pTaskThread->addTask(taskInfo);
+		}
+
+		TaskContentKey taskInfo;
+		taskInfo.m_vecKeyInfo = vecPointDet;
+		taskInfo.m_contents = h.m_mapDetectData;
+		m_pTaskThread->addTask(taskInfo);
+	}
+
 	m_pTaskThread->play();
 
 	ui.labelPlayState->setText(QString::fromLocal8Bit("回放"));

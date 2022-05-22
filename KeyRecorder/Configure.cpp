@@ -50,6 +50,16 @@ void Configure::init()
 			m_strHotelCode = getString(object, QString("HotelCode"));
 			m_strDeviceID = getString(object, QString("DeviceID"));
 			m_strExtraData = getString(object, QString("ExtraData"));
+
+			m_strLocalURLTocken = getString(object, QString("urlTocken"));
+			m_strLocalURLCard = getString(object, QString("urlCard"));
+			m_strChainNum = getString(object, QString("chainNum"));
+			m_strLockNum = getString(object, QString("lockNum"));
+			m_strKey = getString(object, QString("key"));
+			m_strHotelID = getString(object, QString("hotelID"));
+			m_strDeviecAlias = getString(object, QString("deviceAlias"));
+			m_strUser = getString(object, QString("user"));
+			m_strPWD = getString(object, QString("pwd"));
 		}
 	}
 
@@ -69,7 +79,7 @@ void Configure::initWindowName()
 	file.close();
 }
 
-QString Configure::getString(QJsonObject &object, QString& key)
+QString Configure::getString(QJsonObject &object, const QString& key)
 {
 	if (object.contains(key)) {  
 		QJsonValue value = object.value(key); 
@@ -79,6 +89,30 @@ QString Configure::getString(QJsonObject &object, QString& key)
 	}
 
 	return QString("");
+}
+
+int Configure::getInt(QJsonObject& object, const QString& key)
+{
+	if (object.contains(key)) {
+		QJsonValue value = object.value(key);
+		if (value.isDouble()) {
+			return value.toInt();
+		}
+	}
+
+	return 0;
+}
+
+QJsonObject Configure::getObject(QJsonObject& object, const QString& key)
+{
+	if (object.contains(key)) {
+		QJsonValue value = object.value(key);
+		if (value.isObject()) {
+			return value.toObject();
+		}
+	}
+
+	return QJsonObject();
 }
 
 void Configure::save()
@@ -99,6 +133,16 @@ void Configure::save()
 	json.insert("HotelCode", m_strHotelCode);
 	json.insert("DeviceID", m_strDeviceID);
 	json.insert("ExtraData", m_strExtraData);
+
+	json.insert("urlTocken",m_strLocalURLTocken);
+	json.insert("urlCard",m_strLocalURLCard);
+	json.insert("chainNum",m_strChainNum);
+	json.insert("lockNum",m_strLockNum);
+	json.insert("key",m_strKey);
+	json.insert("hotelID",m_strHotelID);
+	json.insert("deviceAlias",m_strDeviecAlias);
+	json.insert("user",m_strUser);
+	json.insert("pwd",m_strPWD);
 
 	QJsonDocument document;
 	document.setObject(json);
@@ -167,7 +211,7 @@ QString Configure::getDeviceID()
 void Configure::setExtraData(QString& strExtraData)
 {
 	m_strExtraData = strExtraData;
-	save();
+	//save();
 }
 QString Configure::getExtraData()
 {

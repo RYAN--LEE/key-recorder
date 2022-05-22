@@ -81,6 +81,12 @@ void MouseHook::clickKey(long x, long y)
     qDebug() << "click  x: " << x << " y: " << y << endl;
 }
 
+void MouseHook::pressKeyDonw()
+{
+    keybd_event(40, 0, 0, 0);
+    qDebug() << "press down" << endl;
+}
+
 //Ð¶ÔØ¹³×Ó
 void  MouseHook::unHook()
 {

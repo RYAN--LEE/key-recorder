@@ -29,6 +29,7 @@ public:
 
 
 	void clickKey(long x, long y);
+	void pressKeyDonw();
 
 	void pressKeyPaste();
 

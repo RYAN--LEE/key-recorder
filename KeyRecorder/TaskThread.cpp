@@ -4,10 +4,12 @@
 #include "constant.h"
 #include "HTTPClient.h"
 #include "Configure.h"
+#include "Input.h"
 #include <QDebug>
 #include <QRect>
 #include <QClipboard>
 #include <QApplication>
+#include <QTextCodec> 
 
 TaskThread::TaskThread(QObject *parent, MouseHook* pMouseHook, Recongnizer* pRecongnizer, ScreenGraber* pScreenGraber)
 	: QThread(parent)
@@ -16,6 +18,7 @@ TaskThread::TaskThread(QObject *parent, MouseHook* pMouseHook, Recongnizer* pRec
     , m_pRecongnizer(pRecongnizer)
     , m_pScreenGraber(pScreenGraber)
 {
+    m_pInput = new Input();
 }
 
 TaskThread::~TaskThread()
@@ -83,6 +86,19 @@ void TaskThread::maxmizeWindow()
         ::FlashWindow(hWnd, TRUE);
     }
 }
+
+void TaskThread::clearTask()
+{
+     m_tasks.clear();
+}
+void TaskThread::addTask(TaskContentKey taskInfo)
+{
+    if (taskInfo.m_vecKeyInfo.size() > 0 && taskInfo.m_contents.size() > 0)
+    {
+        m_tasks.append(taskInfo);
+    }
+
+}
 void TaskThread::run()
 {
     maxmizeWindow();
@@ -93,7 +109,18 @@ void TaskThread::run()
 			msleep(500);
 			continue;
 		}
-        m_strName = "";
+
+        if (m_tasks.size() == 0)
+        {
+            msleep(500);
+            continue;
+        }
+
+        TaskContentKey t = m_tasks.front();
+        m_tasks.pop_front();
+
+        executTask(t);
+        /*m_strName = "";
         m_strID = "";
 
         m_mutex.lock();
@@ -157,7 +184,7 @@ void TaskThread::run()
             if (!currStep.condition().isEmpty())
             {
                 QRect matchRect(-1,-1,0,0);
-                bool bRet = handleCondition(currStep.condition(), matchRect);
+                bool bRet = handleCondition(currStep, matchRect);
                 if (bRet)
                 {
                     emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("执行成功"));
@@ -191,9 +218,97 @@ void TaskThread::run()
             //inputData(QString("qwe"));
         }
 
-        QThread::msleep(1000);
+        QThread::msleep(1000);*/
 
 	}
+}
+
+void TaskThread::executTask(TaskContentKey &task)
+{
+    QVector<KeyInfo>& vecKeyInfo = task.m_vecKeyInfo;
+    m_strName = "";
+    m_strID = "";
+
+    QMap<int, KeyInfo> keyMap;
+    for (int i = 0; i < vecKeyInfo.size(); ++i)
+    {
+        KeyInfo info = vecKeyInfo[i];
+        keyMap[info.m_id] = info;
+    }
+
+    m_strRoomNum = "";
+    KeyInfo currStep = vecKeyInfo[0];
+    while (currStep.m_nextID != 0 || currStep.m_breakID != 0)
+    {
+        if (!m_bPlay)
+        {
+            break;
+        }
+
+        qDebug() << "playClick " << currStep.string() << endl;
+
+        int interval = currStep.interval();
+        if (interval > 0)
+        {
+			QThread::msleep(interval);
+        }
+
+        QRect matchRect(-1, -1, 0, 0);
+        bool bRet = beforClick(currStep.beforeCondition(), matchRect);
+        if (!bRet)
+        {
+            emit stepStatusChange(currStep.m_id, false, QString::fromLocal8Bit("识别失败"));
+            QThread::msleep(200);
+            continue;
+        }
+
+        emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("识别成功"));
+
+        if (!m_bPlay)
+            break;
+
+        adjustPoint(currStep, currStep.m_adjustRect, matchRect);
+        if (currStep.m_needClick == 1)
+        {
+            m_pMouseHook->clickKey(currStep.m_adjustX, currStep.m_adjustY);
+        }
+        emit stepStatusChange(currStep.m_id, true,
+            QString::fromLocal8Bit("点击(") + QString::number(currStep.m_adjustX) + ":" + QString::number(currStep.m_adjustY) + ")");
+
+        if (!currStep.condition().isEmpty())
+        {
+            QRect matchRect(-1, -1, 0, 0);
+            bool bRet = handleCondition(currStep, task.m_contents,matchRect);
+            if (bRet)
+            {
+                emit stepStatusChange(currStep.m_id, true, QString::fromLocal8Bit("执行成功"));
+            }
+            else
+            {
+                emit stepStatusChange(currStep.m_id, false, QString::fromLocal8Bit("执行失败"));
+            }
+            int nextID = bRet ? currStep.m_nextID : currStep.m_breakID;
+            if (!keyMap.contains(nextID))
+            {
+                break;
+            }
+            QRect adjustRect = currStep.m_adjustRect;
+            currStep = keyMap[nextID];
+
+            continue;
+        }
+
+        if (currStep.m_nextID == 0)
+        {
+            break;
+        }
+
+        if (!keyMap.contains(currStep.m_nextID))
+        {
+            break;
+        }
+        currStep = keyMap[currStep.m_nextID];
+    }
 }
 
 void TaskThread::adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect)
@@ -205,7 +320,7 @@ void TaskThread::adjustPoint(KeyInfo &keyInfo, QRect adjustRect, QRect matchRect
     }
 }
 
-bool TaskThread::beforClick(QString& condition, QRect& ajustRect)
+bool TaskThread::beforClick(const QString& condition, QRect& ajustRect)
 {
     if (condition.contains("img_"))
     {
@@ -224,8 +339,20 @@ bool TaskThread::beforClick(QString& condition, QRect& ajustRect)
 }
 
 
-bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
+bool TaskThread::handleCondition(KeyInfo& currStep, QMap<QString, Content>& curContent, QRect& ajustRect)
 {
+    QString condition = currStep.condition();
+    if (condition.startsWith("input_"))
+    {
+        QThread::msleep(500);
+        return handleInput(currStep, curContent, ajustRect);
+    }
+    
+    if (condition.startsWith("popup_"))
+    {
+        QThread::msleep(500);
+        return handlePopup(currStep, curContent, ajustRect);
+    }
     if (condition.contains("img_"))
     {
         //handle img match
@@ -281,6 +408,59 @@ bool TaskThread::handleCondition(QString& condition, QRect &ajustRect)
     return true;
 }
 
+bool TaskThread::handleInput(KeyInfo& currStep, QMap<QString, Content>& curContent, QRect& ajustRecto)
+{
+    QStringList conditions = currStep.condition().split("_");
+    if (conditions.size() < 2)
+    {
+        return false;
+    }
+
+    QMap<QString, Content>::const_iterator itr = curContent.find(conditions[1]);
+    if (itr == curContent.end())
+    {
+        return false;
+    }
+
+    QThread::msleep(100);
+    m_pInput->InputString(itr.value().text);
+    QThread::msleep(1000);
+
+    return true;
+}
+bool TaskThread::handlePopup(KeyInfo& currStep, QMap<QString, Content>& curContent, QRect& ajustRect)
+{
+    QStringList conditions = currStep.condition().split("_");
+    if (conditions.size() < 2)
+    {
+        return false;
+    }
+
+    QMap<QString, Content>::const_iterator itr = curContent.find(conditions[1]);
+    if (itr == curContent.end())
+    {
+        return false;
+    }
+
+    Content content = itr.value();
+    if (content.needScroll)
+    {
+        /*m_pMouseHook->clickKey(currStep.m_adjustX, key->y() + 20);
+        m_pMouseHook->clickKey(currStep.m_adjustX, key->y());
+        for (int i = 0; i < m_nIndex; i++)
+        {
+            m_pMouseHook->pressKeyDonw();
+        }*/
+    }
+	else if (content.popupIndex >= 0)
+	{
+        int y = currStep.m_adjustY + (content.popupIndex + 1) * 28;
+        m_pMouseHook->clickKey(currStep.m_adjustX, y);
+    }
+    QThread::msleep(1000);
+
+    return true;
+}
 QString TaskThread::recongnizeText(QString& imgDir)
 {
     //handle text match
@@ -321,7 +501,8 @@ QString TaskThread::getRoomNum(QString strName, QString strID)
 bool TaskThread::makeCard(QString strName, QString strID, QString roomNum)
 {
     HTTPClient client;
-    QString strRet = client.createCard(strName, strID, roomNum);
+    //QString strRet = client.createCard(strName, strID, roomNum);
+    QString strRet = client.createCardLocal(strName, strID, roomNum);
     if (strRet == "Success")
     {
         return true;
@@ -329,13 +510,13 @@ bool TaskThread::makeCard(QString strName, QString strID, QString roomNum)
     return false;
 }
 
-QString TaskThread::getTemplate(QString &status)
+QString TaskThread::getTemplate(const QString &status)
 {
     return IMG_DIR + status;
 }
 
 
-bool TaskThread::checkScreenStatus(QString &status, QRect& matchRect)
+bool TaskThread::checkScreenStatus(const QString &status, QRect& matchRect)
 {
     QString strTemplate = getTemplate(status);
     if (strTemplate.isEmpty())

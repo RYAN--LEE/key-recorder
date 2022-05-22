@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormSelectName</class>
+ <widget class="QWidget" name="FormSelectName">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>278</width>
+    <height>206</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FormSelectName</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget#FormPassword{
+	background-color: rgb(63, 155, 253);
+}
+QLineEdit {
+      border: 1px solid #91c1f6;
+      border-radius: 3px;
+      padding: 0 8px;
+      background: #f2f2f2;
+};
+
+
+font: 10pt &quot;微软雅黑&quot;;
+color: rgb(59, 59, 59);
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>1</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>1</number>
+   </property>
+   <property name="bottomMargin">
+    <number>1</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="widgetTitle" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>45</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>45</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(63, 155, 253);</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0">
+      <item>
+       <widget class="QLabel" name="label_14">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">image: url(:/icon/logo.png);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;微软雅黑&quot;;
+color: rgb(254, 254, 254);</string>
+        </property>
+        <property name="text">
+         <string>选择名称</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonClose">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-image: url(:/icon/logo/close1.png);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widgetCenter" native="true">
+     <property name="styleSheet">
+      <string notr="true">
+QWidget#widgetCenter{
+    background-color: rgb(255, 255, 255);
+};
+</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>30</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>选择名称</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelState">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(255, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="pushButtonOK">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+      border-radius: 3px;
+      color:white;
+      background-color: rgb(63, 155, 253);
+      min-width: 80px;
+      min-height: 25px;
+  };</string>
+            </property>
+            <property name="text">
+             <string>确定</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtoncancel">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+      border-radius: 3px;
+      color:white;
+	  background-color: rgb(234, 55, 55);
+      min-width: 80px;
+      min-height: 25px;
+  }</string>
+            </property>
+            <property name="text">
+             <string>取消</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>pushButtonOK</tabstop>
+  <tabstop>pushButtoncancel</tabstop>
+  <tabstop>pushButtonClose</tabstop>
+ </tabstops>
+ <resources>
+  <include location="KeyRecorder.qrc"/>
+ </resources>
+ <connections/>
+</ui>
